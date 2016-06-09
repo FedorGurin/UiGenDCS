@@ -1,0 +1,1086 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>589</width>
+    <height>794</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>10</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Просмотр/Изменение параметров модели</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="pageUI">
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QGroupBox" name="groupBox_5">
+                <property name="title">
+                 <string>Просмотр</string>
+                </property>
+                <layout class="QGridLayout">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item row="1" column="0">
+                  <widget class="QPushButton" name="pushButtonTar">
+                   <property name="text">
+                    <string>Параметры цели</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QPushButton" name="pushButtonConst">
+                   <property name="text">
+                    <string>Номера исход. вариантов и общие константы</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QPushButton" name="pushButtonKin">
+                   <property name="toolTip">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-weight:600; color:#5555ff;&quot;&gt;Просмотр кинематических &lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt; font-weight:600; color:#5555ff;&quot;&gt;параметров самолета.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Кинематических параметров самолета</string>
+                   </property>
+                   <property name="autoDefault">
+                    <bool>false</bool>
+                   </property>
+                   <property name="default">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QPushButton" name="pushButtonAtmGeo">
+                   <property name="text">
+                    <string>Географические и атмосферные параметры</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QPushButton" name="buttonBeginCommonConst">
+                   <property name="text">
+                    <string>Начальные константы кинематики самолета</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBoxUpr">
+                <property name="title">
+                 <string>Тип самолета</string>
+                </property>
+                <layout class="QGridLayout">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item row="5" column="0">
+                  <widget class="QRadioButton" name="radioUvod">
+                   <property name="text">
+                    <string>Тестовые маневры при уводе</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QRadioButton" name="radioKab">
+                   <property name="toolTip">
+                    <string>Управление от ручки</string>
+                   </property>
+                   <property name="text">
+                    <string>Управ. из кабины, реальное САУ</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="0">
+                  <widget class="QRadioButton" name="radioFDR">
+                   <property name="text">
+                    <string>Полетная запись</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QRadioButton" name="radioKabCircle">
+                   <property name="text">
+                    <string>Управ. из кабины по кругам</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QRadioButton" name="radioDetCircle">
+                   <property name="text">
+                    <string>Детерминированное по кругам</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QRadioButton" name="radioDet">
+                   <property name="toolTip">
+                    <string>Вид управления, когда органы управления отключены</string>
+                   </property>
+                   <property name="accessibleDescription">
+                    <string/>
+                   </property>
+                   <property name="text">
+                    <string>Детерминированное</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QRadioButton" name="radioButton">
+                   <property name="text">
+                    <string>Детерминированное по кругам(N целей)</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBoxTarget">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="title">
+                 <string>Управление целями</string>
+                </property>
+                <layout class="QGridLayout">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="checkBoxManevrTaget">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="toolTip">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Признак включения маневрирования целей.&lt;/span&gt; &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Маневрирование настраивается в специальной модели через настроечные параметры, если настройка будет не корректной, то цели не будут совершать маневры.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="text">
+                    <string>Маневрирование целей</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_3">
+              <item>
+               <widget class="QGroupBox" name="groupBoxParam">
+                <property name="title">
+                 <string>Параметры</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout">
+                 <item row="0" column="0">
+                  <layout class="QVBoxLayout">
+                   <property name="spacing">
+                    <number>6</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label">
+                     <property name="text">
+                      <string>Счетчик пакетов</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLCDNumber" name="lcdNumberCounter">
+                     <property name="frameShape">
+                      <enum>QFrame::Box</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Sunken</enum>
+                     </property>
+                     <property name="smallDecimalPoint">
+                      <bool>true</bool>
+                     </property>
+                     <property name="segmentStyle">
+                      <enum>QLCDNumber::Flat</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="1" column="0">
+                  <layout class="QVBoxLayout">
+                   <property name="spacing">
+                    <number>6</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_2">
+                     <property name="text">
+                      <string>Кол-во воздушных целей</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLCDNumber" name="lcdNumberTargets">
+                     <property name="frameShadow">
+                      <enum>QFrame::Sunken</enum>
+                     </property>
+                     <property name="smallDecimalPoint">
+                      <bool>true</bool>
+                     </property>
+                     <property name="segmentStyle">
+                      <enum>QLCDNumber::Flat</enum>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="2" column="0">
+                  <layout class="QVBoxLayout">
+                   <property name="spacing">
+                    <number>6</number>
+                   </property>
+                   <property name="leftMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="topMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="rightMargin">
+                    <number>0</number>
+                   </property>
+                   <property name="bottomMargin">
+                    <number>0</number>
+                   </property>
+                   <item>
+                    <widget class="QLabel" name="label_3">
+                     <property name="text">
+                      <string>Порядковый номер варианта</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout">
+                     <property name="spacing">
+                      <number>6</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QSpinBox" name="spinBoxNumVariant"/>
+                     </item>
+                     <item>
+                      <widget class="QToolButton" name="toolButtonVariant">
+                       <property name="toolTip">
+                        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;При нажатии этой кнопки будет выбран номер варианта указанный в поле &amp;quot;Номер варианта&amp;quot;. После автоматически выполнится режим &amp;quot;исходное&amp;quot;.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="text">
+                        <string>Исх</string>
+                       </property>
+                       <property name="checkable">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QPushButton" name="pushButtonComUst">
+                   <property name="toolTip">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;при нажатии этой кнопки, параметры помеченные &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;указанной иконкой будут изменены и при нажатии&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; &amp;quot;пуск&amp;quot; они не сбросятся, а будут далее интегрироваться в уравнениях движения.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">selection-background-color: rgb(202, 255, 57);
+selection-color: rgb(0, 0, 0);
+gridline-color: rgb(255, 255, 0);
+border-color: rgb(255, 0, 0);</string>
+                   </property>
+                   <property name="text">
+                    <string>Признак установки</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="../res.qrc">
+                     <normaloff>:/png/tool</normaloff>:/png/tool</iconset>
+                   </property>
+                   <property name="checkable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBoxFunc">
+                <property name="title">
+                 <string>Функции управления самолетом</string>
+                </property>
+                <layout class="QGridLayout">
+                 <property name="leftMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>9</number>
+                 </property>
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item row="0" column="0">
+                  <widget class="QGroupBox" name="groupBoxEngine">
+                   <property name="title">
+                    <string>Управление тягой двигателя</string>
+                   </property>
+                   <layout class="QGridLayout">
+                    <property name="leftMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="radioButtonRUD">
+                      <property name="toolTip">
+                       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Тяга двигателя зависит от реального РУД&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>РУД</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QRadioButton" name="radioButtonAvtoTiaga">
+                      <property name="toolTip">
+                       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Обработка реального РУД отключается, включается мат. модель автомата тяги, которая подбирает тягу так, что бы скорость была постоянная.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      </property>
+                      <property name="text">
+                       <string>Автомат тяги</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QGroupBox" name="groupBoxAuto">
+                   <property name="title">
+                    <string>Автомат управления</string>
+                   </property>
+                   <layout class="QGridLayout">
+                    <property name="leftMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="radioButtonProdChannel">
+                      <property name="text">
+                       <string>Продольный канал ид. пилота</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="radioButtonSAUAvtopilot">
+                      <property name="text">
+                       <string>САУ ид. пилота + автопилот</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QRadioButton" name="radioButtonAvtoCancel">
+                      <property name="text">
+                       <string>Отключено</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QGroupBox" name="groupBoxAerod1">
+                   <property name="title">
+                    <string>Аэродинамика 1</string>
+                   </property>
+                   <layout class="QGridLayout">
+                    <property name="leftMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="radioButtonAerod1">
+                      <property name="text">
+                       <string>Аэродинамика 1</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="radioButtonDeter">
+                      <property name="text">
+                       <string>Детерминированная</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QRadioButton" name="radioButtonCancel">
+                      <property name="text">
+                       <string>Отключено</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <widget class="QGroupBox" name="groupBoxDvi">
+                   <property name="title">
+                    <string>Вид движения</string>
+                   </property>
+                   <layout class="QGridLayout">
+                    <property name="leftMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="0" column="0">
+                     <widget class="QRadioButton" name="radioButtonLinearMotion">
+                      <property name="text">
+                       <string>Прямолинейное</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="0">
+                     <widget class="QRadioButton" name="radioButtonSerpent">
+                      <property name="text">
+                       <string>Змейкой</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QPushButton" name="pushButtonRestart">
+                <property name="toolTip">
+                 <string>Эту кнопку нужно нажать перед перезапуском целевого компьютера(VxWorks). Это необходимо для сброса 4 канального адаптера МКИО.</string>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>false</bool>
+                </property>
+                <property name="text">
+                 <string>Перезапуск модели</string>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+                <property name="autoRepeat">
+                 <bool>false</bool>
+                </property>
+                <property name="autoExclusive">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonRefresh">
+                <property name="text">
+                 <string>Обновить</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normaloff>:/png/refresh.png</normaloff>:/png/refresh.png</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout">
+              <property name="spacing">
+               <number>6</number>
+              </property>
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelRegime">
+                <property name="lineWidth">
+                 <number>1</number>
+                </property>
+                <property name="midLineWidth">
+                 <number>0</number>
+                </property>
+                <property name="text">
+                 <string>Подготовка...</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer>
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="labelStatus">
+                <property name="font">
+                 <font>
+                  <pointsize>6</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="pageMPPM"/>
+      <widget class="QWidget" name="page3DView"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>589</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <kerning>false</kerning>
+    </font>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Просмотр</string>
+    </property>
+    <widget class="QMenu" name="menu3D">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="title">
+      <string>Визуализация</string>
+     </property>
+     <property name="icon">
+      <iconset>
+       <normaloff>:/png/zoom.png</normaloff>:/png/zoom.png</iconset>
+     </property>
+     <addaction name="actionView3DArea"/>
+    </widget>
+    <addaction name="actionViewPM"/>
+    <addaction name="actionPultPNM"/>
+    <addaction name="actionVarEdir"/>
+    <addaction name="actionOVK"/>
+    <addaction name="actionComSusp"/>
+    <addaction name="separator"/>
+    <addaction name="menu3D"/>
+    <addaction name="actionTest"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Настройки</string>
+    </property>
+    <widget class="QMenu" name="menu_4">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Язык</string>
+     </property>
+     <addaction name="actionRussian"/>
+     <addaction name="actionEnglish"/>
+    </widget>
+    <addaction name="actionProfile"/>
+    <addaction name="menu_4"/>
+   </widget>
+   <widget class="QMenu" name="menuNetworkSwitch">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string>Сетевое окружение</string>
+    </property>
+    <addaction name="actionPKIPOn"/>
+    <addaction name="actionUCVSOn"/>
+    <addaction name="actionConsoleOn"/>
+    <addaction name="action_IP"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="actionHelp"/>
+    <addaction name="actionBug"/>
+   </widget>
+   <addaction name="menu"/>
+   <addaction name="menuSettings"/>
+   <addaction name="menuNetworkSwitch"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionViewPM">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/png/zoom.png</normaloff>:/png/zoom.png</iconset>
+   </property>
+   <property name="text">
+    <string>Просмотр/изменение программных модулей</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>Показать самолет в связанной СК</string>
+   </property>
+  </action>
+  <action name="action3DModel">
+   <property name="text">
+    <string>Ориентация самолета в связанной СК</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="actionViewModel">
+   <property name="text">
+    <string>Ориентация самолета и целей в земной СК</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="actionNU">
+   <property name="text">
+    <string>Начальных условий</string>
+   </property>
+  </action>
+  <action name="actionPlots">
+   <property name="text">
+    <string>Показать список графиков</string>
+   </property>
+  </action>
+  <action name="actionPultPNM">
+   <property name="text">
+    <string>Пульт ПНМ</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionRussian">
+   <property name="text">
+    <string>Русский</string>
+   </property>
+  </action>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>Английский</string>
+   </property>
+  </action>
+  <action name="actionView3DArea">
+   <property name="text">
+    <string>3D</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionSuspension">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Подвески</string>
+   </property>
+  </action>
+  <action name="actionIOSOOn">
+   <property name="text">
+    <string>Включить ИОСО</string>
+   </property>
+  </action>
+  <action name="actionPKIPOn">
+   <property name="text">
+    <string>Включить ПКИП</string>
+   </property>
+  </action>
+  <action name="actionUCVSOn">
+   <property name="text">
+    <string>Включить УЦВС</string>
+   </property>
+  </action>
+  <action name="actionVarEdir">
+   <property name="text">
+    <string>Редактор вариантов</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Справка</string>
+   </property>
+  </action>
+  <action name="actionBug">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Сообщить об ошибке</string>
+   </property>
+  </action>
+  <action name="action_IP">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Указать IP вручную</string>
+   </property>
+  </action>
+  <action name="actionTest">
+   <property name="text">
+    <string>Тесты</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <action name="actionStart">
+   <property name="text">
+    <string>Start</string>
+   </property>
+  </action>
+  <action name="actionProfile">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Профиль</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="text">
+    <string>Next</string>
+   </property>
+  </action>
+  <action name="actionPrev">
+   <property name="text">
+    <string>Prev</string>
+   </property>
+  </action>
+  <action name="actionConsoleOn">
+   <property name="text">
+    <string>Включить Консоль</string>
+   </property>
+  </action>
+  <action name="actionOVK">
+   <property name="text">
+    <string>Режим ОВК</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action2D">
+   <property name="text">
+    <string>2D</string>
+   </property>
+  </action>
+  <action name="actionComSusp">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Имитатор СУО</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../res.qrc"/>
+ </resources>
+ <connections/>
+</ui>
