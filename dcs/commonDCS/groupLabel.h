@@ -1,6 +1,6 @@
-#ifndef GROUPLABEL_H
+﻿#ifndef GROUPLABEL_H
 #define GROUPLABEL_H
-#include "GenericNode.h"
+#include "genericNode.h"
 
 //! Класс групирует модели БРЭО
 class GroupLabel:public GenericNode

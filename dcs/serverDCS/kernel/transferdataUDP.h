@@ -9,7 +9,7 @@
 
 //#include "formwait.h"
 #include "BinaryPresent.h"
-#include "sio.h"
+#include "../commonDCS/sio.h"
 
 //! класс представления данных
 class BinaryPresent;
@@ -154,21 +154,10 @@ public:
     //! класс представления данных
     BinaryPresent *binaryPresent;
 
-    //! задать признак главной программы
-    void setMainProg(bool f);
-
-    //! признак главной программы
-    bool mainProg;
-    
     //! признак того, что идет обработка запроса
     bool processRequest;
-    //! закрыть окно "Ожидание данных"
-    void closeWindowWait(){formWait->close();}
 private:
-    //! прогресс операции
-    QProgressBar *progressBar;
-    //! форма с отображением информации при ожидании данных
-    FormWait *formWait;
+
     //! запретить/разрешить прием данных по UDP
     void enableRecive(bool enable);
     //! функция обработки ответного запроса
@@ -176,8 +165,6 @@ private:
     //! функция обработки ответного запроса в случае ошибки
     void answerRequestError();
     //! сокет приема данных от подчиненной версии программы
-    QUdpSocket udpSocketSlave;
-    //! сокет
     QUdpSocket udpSocket;
 
     //! запрос на отсылку
@@ -213,8 +200,6 @@ signals:
     void callbackStatus(bool status,uint uid);
 public slots:
     //! слот на прием пакетов
-    void processPendingDatagrams();
-    //! слот на прием пакетов от подчиненной версии программы
-    void processPendingDatagramsSlave();
+    void processPendingDatagrams();   
 };
 #endif

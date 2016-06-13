@@ -1,12 +1,6 @@
-/*
- * SIO.cpp
- *
- *  Created on: 28.08.2008
- *      Author: Fedor
- */
 
-#include "SIO.h"
-#include "../../globalFunc/math_func.h"
+#include "sio.h"
+#include "../globalFunc/math_func.h"
 
 SIO::SIO(const QDomElement& element, GenericNode *parent):GenericNode()
 {

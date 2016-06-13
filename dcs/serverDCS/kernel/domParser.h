@@ -9,7 +9,7 @@
 #define DOMPARSER_H_
 
 //#include <QStandardItem>
-#include <QApplication>
+//#include <QApplication>
 #include <QDomElement>
 #include <QDomDocument>
 //#include <QMessageBox>
@@ -17,12 +17,12 @@
 #include <QObject>
 #include <QFile>
 
-#include "GenericNode.h"
-#include "VariantNode.h"
-#include "VariantState.h"
+#include "../commonDCS/GenericNode.h"
+#include "../commonDCS/variantNode.h"
+#include "../commonDCS/variantState.h"
 #include "../globalFunc/math_func.h"
 
-#include "formstatusexitprogram.h"
+//#include "formstatusexitprogram.h"
 
 //XML файл с описанием данных
 //#define	DATA_FILE "data.xml"
@@ -61,7 +61,7 @@ public:
 
     GenericNode* rootNodeData(){return rootItemData;}
     //! форма с статусом загрузки
-    FormStatusExitProgram *formStatusExit;
+    //FormStatusExitProgram *formStatusExit;
     //! сохранить варианты в XML файл
     void saveVariant();
 

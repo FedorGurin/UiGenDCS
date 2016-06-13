@@ -1,10 +1,3 @@
-/*
- * PModule.cpp
- *
- *  Created on: 27.08.2008
- *      Author: Fedor
- */
-
 #include "pm.h"
 #include "../globalFunc/math_func.h"
 

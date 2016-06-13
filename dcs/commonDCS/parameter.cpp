@@ -1,11 +1,11 @@
-/*
+﻿/*
  * Parameter.cpp
  *
  *  Created on: 27.08.2008
  *      Author: Fedor
  */
 
-#include "Parameter.h"
+#include "parameter.h"
 #include "../globalFunc/math_func.h"
 #include <QByteArray>
 

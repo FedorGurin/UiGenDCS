@@ -1,6 +1,6 @@
-#include "GroupLabel.h"
-#include "Structure.h"
-#include "Parameter.h"
+﻿#include "groupLabel.h"
+#include "structure.h"
+#include "parameter.h"
 
 GroupLabel::GroupLabel(const QDomElement& element, GenericNode *parent):GenericNode()
 {

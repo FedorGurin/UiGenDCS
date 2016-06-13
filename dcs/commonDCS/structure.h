@@ -1,12 +1,7 @@
-/*
- * Structure.h
- *
- *  Created on: 27.08.2008
- *      Author: Fedor
- */
+﻿
 #ifndef STRUCTURE_H_
 #define STRUCTURE_H_
-#include "GenericNode.h"
+#include "genericNode.h"
 
 class Structure: public GenericNode {
 public:

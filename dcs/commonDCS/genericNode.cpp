@@ -1,11 +1,5 @@
-/*
- * GenericNode.cpp
- *
- *  Created on: 02.09.2008
- *      Author: Fedor
- */
 
-#include "GenericNode.h"
+#include "genericNode.h"
 
 
 GenericNode::GenericNode() :Node(){

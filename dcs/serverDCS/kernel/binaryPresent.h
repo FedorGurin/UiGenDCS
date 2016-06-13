@@ -8,8 +8,8 @@
 #ifndef BINARYPRESENT_H
 #define BINARYPRESENT_H
 #include "transferdataUDP.h"
-#include "GenericNode.h"
-#include "VariantState.h"
+#include "../commonDCS/genericNode.h"
+#include "../commonDCS/variantState.h"
 //#include "dumpform.h"
 #include <QObject>
 
@@ -44,12 +44,12 @@ public:
     void recursGetData(GenericNode* node,QDataStream &out,int &tempBit);
 
 //    void callbackStatusRequest(bool st,uint uid);
-    void hideDump(){dumpForm->hide();}
-    void showDump(){dumpForm->show();}
+    //void hideDump(){dumpForm->hide();}
+    //void showDump(){dumpForm->show();}
     //! прочитать с выравниванием в nums байт
     void getAllign(QDataStream &out,int nums);
 private:
-    DumpForm *dumpForm;
+    //DumpForm *dumpForm;
 
 signals:
     //! результат обработки запроса

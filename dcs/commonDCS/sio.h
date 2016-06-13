@@ -1,14 +1,8 @@
-/*
- * SIO.h
- *
- *  Created on: 28.08.2008
- *      Author: Fedor Gurin
- */
-
+﻿
 #ifndef SIO_H_
 #define SIO_H_
 
-#include "GenericNode.h"
+#include "genericNode.h"
 
 //! Структура блока с параметрами(Setup/Input/Output)
 class SIO: public GenericNode{

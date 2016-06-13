@@ -1,16 +1,10 @@
-/*
- * VariantNode.h
- *
- *  Created on: 07.09.2008
- *      Author: Fedor
- */
-
+﻿
 #ifndef VARIANTNODE_H_
 #define VARIANTNODE_H_
 #include <QList>
 #include <QString>
 #include <QDomElement>
-#include "Node.h"
+#include "node.h"
 
 class VariantNode:public Node{
 public:

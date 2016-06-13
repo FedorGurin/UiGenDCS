@@ -1,14 +1,14 @@
 #ifndef ENGINEDATA_H
 #define ENGINEDATA_H
 
-#include "GenericNode.h"
+#include "../commonDCS/genericNode.h"
 #include "BinaryPresent.h"
-#include "Parameter.h"
-#include "SIO.h"
-#include "../CommonEngineData/CommonEngineData.h"
+#include "../commonDCS/Parameter.h"
+#include "../commonDCS/sio.h"
+//#include "../CommonEngineData/CommonEngineData.h"
 
-#include <QTreeWidgetItem>
-#include <QTreeWidget>
+//#include <QTreeWidgetItem>
+//#include <QTreeWidget>
 #include <QThread>
 #include <QWaitCondition>
 #include <QMutex>
@@ -170,10 +170,10 @@ public:
     QList <Node* >          listSNodes;
 
     //! список графических узлов QTreeWidgetItem* выбранных пользователем
-    QList <QTreeWidgetItem* > listSelectedItems;
+    //QList <QTreeWidgetItem* > listSelectedItems;
 
-    QTreeWidgetItem     *rootTreeWidget;
-    QTreeWidget         *treeWidget;
+    //QTreeWidgetItem     *rootTreeWidget;
+    //QTreeWidget         *treeWidget;
 
     //! проверка формата команды
     bool testCommand(QString value);

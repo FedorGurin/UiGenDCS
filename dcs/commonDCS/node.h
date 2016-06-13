@@ -1,11 +1,4 @@
-/*
- * Node.h
- *
- *  Created on: 08.09.2008
- *      Author: Fedor
- */
-
-#ifndef NODE_H_
+﻿#ifndef NODE_H_
 #define NODE_H_
 
 #include <QString>

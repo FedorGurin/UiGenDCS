@@ -1,11 +1,4 @@
-/*
- * Node.cpp
- *
- *  Created on: 08.09.2008
- *      Author: Fedor
- */
-
-#include "Node.h"
+#include "node.h"
 
 Node::Node()
 {

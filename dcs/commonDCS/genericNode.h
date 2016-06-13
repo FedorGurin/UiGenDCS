@@ -1,15 +1,9 @@
-/*
- * GenericNode.h
- *
- *  Created on: 02.09.2008
- *      Author: Fedor
- */
-
+﻿
 #ifndef GENERICNODE_H_
 #define GENERICNODE_H_
 
-#include "Node.h"
-#include "VariantNode.h"
+#include "node.h"
+#include "variantNode.h"
 
 //! базовый узел для дерева описывающее структуру данных
 class GenericNode:public Node

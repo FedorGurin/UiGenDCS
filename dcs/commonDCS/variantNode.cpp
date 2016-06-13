@@ -1,13 +1,6 @@
-/*
- * VariantNode.cpp
- *
- *  Created on: 07.09.2008
- *      Author: Fedor
- */
-
-#include "VariantNode.h"
-#include "Parameter.h"
-#include "VariantState.h"
+﻿#include "variantNode.h"
+#include "parameter.h"
+#include "variantState.h"
 
 
 VariantNode::VariantNode():Node() {

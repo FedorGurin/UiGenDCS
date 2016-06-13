@@ -6,11 +6,13 @@
  */
 
 #include "BinaryPresent.h"
-#include "Parameter.h"
-#include "Structure.h"
-#include "SIO.h"
-#include "../globalFunc/gl_func.h"
+#include "../commonDCS/parameter.h"
+#include "../commonDCS/structure.h"
+#include "../commonDCS/sio.h"
+#include "../globalFunc/math_func.h"
 #include <QStringList>
+
+#include <QDataStream>
 typedef union
 {
     int ii;
@@ -23,7 +25,7 @@ BinaryPresent::BinaryPresent(QObject *parent):QObject(parent)
     //получение ответа
     connect(transferUDP,SIGNAL(callbackStatus(bool, uint)),this,SIGNAL(statusR(bool,uint)));
 
-    dumpForm=new DumpForm;
+    //dumpForm=new DumpForm;
     node=0;
 }
 void BinaryPresent::getData(GenericNode* node, uint uidNode)
@@ -49,7 +51,7 @@ void BinaryPresent::setData(GenericNode* node, uint uidNode)
     SIO *sio=static_cast<SIO* >(recursSIONode(node));
     this->node=sio;
 
-    dumpForm->clear();
+    //dumpForm->clear();
     int bitField=0;
     recursSetData(sio,in,bitField);
 
@@ -90,7 +92,7 @@ void BinaryPresent::recursSetData(GenericNode* node,QDataStream &in,int &bitFiel
                 if(str->isFieldBits==1)
                 {
                     in<<bitField;
-                    dumpForm->addValue(str->offset,QString::number(bitField,2)+tr("Битовое поле-")+str->displayName,4);
+                    //dumpForm->addValue(str->offset,QString::number(bitField,2)+tr("Битовое поле-")+str->displayName,4);
                 }
             }
         }else if(tempNode->type()==Node::PARAM)
@@ -102,9 +104,9 @@ void BinaryPresent::recursSetData(GenericNode* node,QDataStream &in,int &bitFiel
                 if(param->alignBytes!=0)
                 {
                     in.writeRawData(Parameter::alignArray,param->alignBytes);
-                    dumpForm->addValue(param->offset-param->alignBytes,tr(" (")+QString::number(param->alignBytes)+tr(") байт, выравнивание"),param->alignBytes);
+                   // dumpForm->addValue(param->offset-param->alignBytes,tr(" (")+QString::number(param->alignBytes)+tr(") байт, выравнивание"),param->alignBytes);
                 }
-                dumpForm->addValue(param->offset,param->value+tr(" (")+param->typeStr+tr(") байт")+param->displayName,param->bytes);
+                //dumpForm->addValue(param->offset,param->value+tr(" (")+param->typeStr+tr(") байт")+param->displayName,param->bytes);
                 in.writeRawData(Parameter::binData(param),param->bytes);
                 qDebug("name=%s, bytes=%d, offset=%d\n",qPrintable(param->displayName),param->bytes,param->offset);
             }
@@ -144,7 +146,7 @@ void BinaryPresent::recursSetData(GenericNode* node,QDataStream &in,int &bitFiel
 void BinaryPresent::reciveData(QDataStream &out)
 {
     int bitField=0;
-    dumpForm->clear();
+   // dumpForm->clear();
     recursGetData(node,out,bitField);
 }
 GenericNode* BinaryPresent::recFindPModule(GenericNode *node,bool stop)
@@ -202,7 +204,7 @@ void BinaryPresent::recursGetData(GenericNode* node,QDataStream &out, int &tempB
                 {
                     tempBit=0;
                     out>>tempBit_;
-                    dumpForm->addValue(str->offset,QString::number(tempBit,2)+tr("Битовое поле-")+str->displayName,4);
+                   // dumpForm->addValue(str->offset,QString::number(tempBit,2)+tr("Битовое поле-")+str->displayName,4);
                 }
             }
             recursGetData(static_cast<GenericNode* >(tempNode),out,tempBit_);
@@ -301,7 +303,7 @@ void BinaryPresent::recursGetData(GenericNode* node,QDataStream &out, int &tempB
                 }
                 param->setValue(QString(array));
             }
-            dumpForm->addValue(param->offset,param->value+tr(" (")+param->typeStr+tr(") байт")+param->displayName,param->bytes);
+           // dumpForm->addValue(param->offset,param->value+tr(" (")+param->typeStr+tr(") байт")+param->displayName,param->bytes);
         }
     }
 }

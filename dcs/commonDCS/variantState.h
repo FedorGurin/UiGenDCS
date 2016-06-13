@@ -1,16 +1,10 @@
-/*
- * VariantState.h
- *
- *  Created on: 16.09.2008
- *      Author: Fedor
- */
-
+﻿
 #ifndef VARIANTSTATE_H_
 #define VARIANTSTATE_H_
 
 #include <QDomElement>
-#include "Node.h"
-#include "VariantNode.h"
+#include "node.h"
+#include "variantNode.h"
 //! Класс описывающий варианты сосотяния
 class VariantState :public Node
 {

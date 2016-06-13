@@ -8,15 +8,16 @@
 #include "DomParser.h"
 
 
-#include "PModule.h"
-#include "SIO.h"
-#include "Structure.h"
-#include "Parameter.h"
-#include "GroupLabel.h"
-#include "SettingXML.h"
+#include "../commonDCS/pm.h"
+#include "../commonDCS/sio.h"
+#include "../commonDCS/structure.h"
+#include "../commonDCS/parameter.h"
+#include "../commonDCS/groupLabel.h"
+//#include "SettingXML.h"
 
 #include <QFile>
 #include <QTextStream>
+#include <QCoreApplication>
 //#define PRINT_WARNING_LOAD_FILE
 
 DomParser::DomParser(QObject *parent):QObject(parent)
@@ -36,15 +37,15 @@ DomParser::DomParser(QObject *parent):QObject(parent)
     rootItemVariantState=0;
 
     //! открываем файл с содержимым описывающим данные
-    bool okDesData=openFileDesData(qApp->applicationDirPath()+"/xml/"+SettingXML::getInstance()->fileData);
+    bool okDesData=openFileDesData(QCoreApplication::applicationDirPath()+"/xml/");//+SettingXML::getInstance()->fileData);
     if(okDesData==false)
     {
         rootItemData=0;
         return;
     }
     //! открываем файл с вариантами
-    openFileVariants(qApp->applicationDirPath()+"/xml/"+QString(VARIANT_FILE));
-    openFileVariantsState(qApp->applicationDirPath()+"/xml/"+QString(VARIANTSTATE_FILE));
+    openFileVariants(QCoreApplication::applicationDirPath()+"/xml/"+QString(VARIANT_FILE));
+    openFileVariantsState(QCoreApplication::applicationDirPath()+"/xml/"+QString(VARIANTSTATE_FILE));
 
     //! в случае если вариантов нет, то не нужно сливать деревья
     if(rootItemVariant!=0)
@@ -177,16 +178,16 @@ void DomParser::openFileVariants(const QString &nameFile)
         }
         else
         {
-            QMessageBox::warning(0,tr("Внимание"),
-                                 tr("Ошибка в структуре XML файла \n = ")+QString(VARIANT_FILE)+"\nError msg="
-                                 +errMsg+"\nLine="+errLine+"\nColumn="+errColumn);
+//            QMessageBox::warning(0,tr("Внимание"),
+//                                 tr("Ошибка в структуре XML файла \n = ")+QString(VARIANT_FILE)+"\nError msg="
+//                                 +errMsg+"\nLine="+errLine+"\nColumn="+errColumn);
         }
     }
 #ifdef PRINT_WARNING_LOAD_FILE
     else
     {
-        QMessageBox::warning(0,tr("Внимание"),
-                             tr("Файл не найден = ")+QString(VARIANT_FILE));
+//        QMessageBox::warning(0,tr("Внимание"),
+//                             tr("Файл не найден = ")+QString(VARIANT_FILE));
     }
 #endif
 }
@@ -219,9 +220,9 @@ void DomParser::openFileVariantsState(const QString &nameFile)
         }
         else
         {
-            QMessageBox::warning(0,tr("Внимание"),
-                                 tr("Ошибка в структуре XML файла \n = ")+QString(VARIANTSTATE_FILE)+"\nError msg="
-                                 +errMsg+"\nLine="+errLine+"\nColumn="+errColumn);
+//            QMessageBox::warning(0,tr("Внимание"),
+//                                 tr("Ошибка в структуре XML файла \n = ")+QString(VARIANTSTATE_FILE)+"\nError msg="
+//                                 +errMsg+"\nLine="+errLine+"\nColumn="+errColumn);
         }
     }
 #ifdef PRINT_WARNING_LOAD_FILE
@@ -260,9 +261,9 @@ bool DomParser::openFileDesData(const QString &nameFile)
         else
         {
             ok=false;
-            QMessageBox::warning(0,tr("Внимание"),
-                                 tr("Ошибка в структуре XML файла = ")+SettingXML::getInstance()->fileData+"\n\nError msg="
-                                 +errMsg+"\nLine="+QString::number(errLine)+"\nColumn="+QString::number(errColumn));
+//            QMessageBox::warning(0,tr("Внимание"),
+//                                 tr("Ошибка в структуре XML файла = ")+SettingXML::getInstance()->fileData+"\n\nError msg="
+//                                 +errMsg+"\nLine="+QString::number(errLine)+"\nColumn="+QString::number(errColumn));
 
             //qApp->quit();
         }
@@ -270,8 +271,8 @@ bool DomParser::openFileDesData(const QString &nameFile)
     else
     {
         ok=false;
-        QMessageBox::warning(0,tr("Внимание"),
-                             tr("Файл не найден = ")+SettingXML::getInstance()->fileData);
+//        QMessageBox::warning(0,tr("Внимание"),
+//                             tr("Файл не найден = ")+SettingXML::getInstance()->fileData);
     }
     return ok;
 }
@@ -385,8 +386,8 @@ void DomParser::saveVariant()
         {
             node= static_cast<VariantNode* > (rootItemVariant->child[i]);
 
-            formStatusExit->setSecondMsg(node->displayName);
-            formStatusExit->count_signal();
+            //formStatusExit->setSecondMsg(node->displayName);
+            //formStatusExit->count_signal();
 
             QDomElement elementChild=saveDomVariants.createElement("variantPM");
 
@@ -425,8 +426,8 @@ void DomParser::saveStateVariant()
         for(int i=0;i<rootItemVariantState->child.size();i++)
         {
             node= static_cast<VariantState* > (rootItemVariantState->child[i]);
-            formStatusExit->setSecondMsg(node->displayName);
-            formStatusExit->count_signal();
+            //formStatusExit->setSecondMsg(node->displayName);
+            //formStatusExit->count_signal();
 
             QDomElement elementChild=saveDomVariantsState.createElement("variantState");
             elementChild.setAttribute("displayName",node->displayName);

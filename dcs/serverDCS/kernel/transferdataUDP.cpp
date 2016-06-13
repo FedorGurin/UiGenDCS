@@ -1,7 +1,7 @@
 #include "transferdataUDP.h"
 #include "../globalFunc/math_func.h"
-#include "SIO.h"
-#include "Parameter.h"
+#include "../commonDCS/sio.h"
+#include "../commonDCS/parameter.h"
 //#include "SettingXML.h"
 //#include <QMessageBox>
 #include <QDataStream>
@@ -11,6 +11,10 @@
 
 #define DEBUG_TRANS
 
+
+#define RECIVE_PORT 1
+#define SEND_PORT 2
+#define IP "192.168.1.200"
 #ifdef DEBUG_TRANS
 int count_error_selected=0;
 int count_error_noconfirm=0;
@@ -24,24 +28,7 @@ void TransferDataUDP::enableRecive(bool enable)
     else udpSocket.disconnect();
 }
 
-//! обработка запроса от slaveProg (для MainProg)
-void TransferDataUDP::processPendingDatagramsSlave()
-{
-    QByteArray datagram;
-    do
-    {
-        datagram.resize(udpSocketSlave.pendingDatagramSize());
-        udpSocketSlave.readDatagram(datagram.data(), datagram.size());
-    }while (udpSocketSlave.hasPendingDatagrams());
 
-    QDataStream out(&datagram,QIODevice::ReadOnly);
-    out.setVersion(QDataStream::Qt_4_2);
-    //out.readRawData((char*)&sendReq,sizeof(TRequest));
-
-    //! ретранслируем данные в целевую машину
-    //QUdpSocket socket;
-    //socket.writeDatagram((char*)&sendReq,sizeof(TRequest),QHostAddress(setting->ip),setting->send_port);
-}
 
 void TransferDataUDP::processPendingDatagrams()
 {
@@ -120,8 +107,8 @@ void TransferDataUDP::answerRequest()
             count_error_selected++;
 
             QString errorString=tr("Не совпадает количество параметров.");
-            formWait->setMessage(tr("Статус: Ошибка - ")+errorString);
-            formWait->show();
+            //formWait->setMessage(tr("Статус: Ошибка - ")+errorString);
+            //formWait->show();
 
             //! обработка запроса закончена
             processRequest=false;
@@ -161,43 +148,36 @@ void TransferDataUDP::answerRequestError()
     else if(answerModuleReq.err==SIZE_TYPE_IS_ZERO) errorString= tr("Нулевой размер типа программного модуля.\n Проверь тип в таблице адресов программных модулей(файл-datacontrol.cpp)");
     else                                            errorString= tr("Неизвестная причина.\nВероятно повреждение пакета.\nПовторите запрос");
 
-    formWait->setMessage(QString::number(sendModuleReq.index)+tr(" - Ошибка - ")+errorString);
-    formWait->show();
+    //formWait->setMessage(QString::number(sendModuleReq.index)+tr(" - Ошибка - ")+errorString);
+    //formWait->show();
     //! обработка запроса закончена
     processRequest=false;
     //! запрос выполнен с ошибкой
     emit callbackStatus(false,answerHReq.uid);
 }
-void TransferDataUDP::setMainProg(bool f)
-{
-    mainProg=f;
-    if(mainProg==false)
-    {
-        udpSocket.bind(SettingXML::getInstance()->recive_port_slave);
-    }
-}
+
 TransferDataUDP::TransferDataUDP(BinaryPresent* bin)
 {
     countTics=0;
 
-    mainProg=true;
+    //mainProg=true;
     //! обработка запроса закончена
     processRequest=false;
     //! загрузка настроек
     //setting=new SettingXML;
     //! Индикация хода выполнения процесса
-    formWait=new FormWait();
+    //formWait=new FormWait();
     //! представление данных
     binaryPresent=bin;
 
-    formWait->setWindowFlags(Qt::Popup);
+    //formWait->setWindowFlags(Qt::Popup);
     //formWait->setWindowModality(Qt::ApplicationModal);
 
     currentId=0;
 
-    bool result=udpSocket.bind(SettingXML::getInstance()->recive_port);
+    bool result=udpSocket.bind(RECIVE_PORT);
     udpSocket.setSocketOption(QAbstractSocket::LowDelayOption,1);
-    bool result_=udpSocketSlave.bind(SettingXML::getInstance()->send_port_slave);
+
 
     memset((void*)&sendHReq,        0,  sizeof(THeadRequest));
     memset((void*)&answerHReq,      0,  sizeof(THeadRequest));
@@ -211,30 +191,24 @@ TransferDataUDP::TransferDataUDP(BinaryPresent* bin)
     memset((void*)&sendMemReq,      0,  sizeof(TMemRequest));
     memset((void*)&answerMemReq,    0,  sizeof(TMemRequest));
 
-    if(result==false || result_==false)
+    if(result==false)
     {
-        QMessageBox::warning(0,tr("Внимание"),
-                 tr("Не удалось связать сокет с портом. Вероятно порт уже открыт"));
+//        QMessageBox::warning(0,tr("Внимание"),
+//                 tr("Не удалось связать сокет с портом. Вероятно порт уже открыт"));
     }
 }
 void TransferDataUDP::timerEvent(QTimerEvent *)
 {
     countTics++;
-    formWait->setValue(countTics);
+    //formWait->setValue(countTics);
 
     if(countSending<COUNT_DOUBLE_PACKET)
     {
         QUdpSocket socket;
         socket.setSocketOption(QAbstractSocket::LowDelayOption,1);
 
-        QHostAddress addr(SettingXML::getInstance()->ip);
-        int port=SettingXML::getInstance()->send_port;
-
-        if(mainProg==false)
-        {
-            addr=QHostAddress(SettingXML::getInstance()->ip_main_prog);
-            port=SettingXML::getInstance()->send_port_slave;
-        }
+        QHostAddress addr(IP);
+        int port=SEND_PORT;
         switch(sendHReq.type)
         {
             case MODULE:
@@ -264,8 +238,8 @@ void TransferDataUDP::timerEvent(QTimerEvent *)
     }
 
     //! открываем окно с сообщениями
-    if(countTics>COUNT_SHOW_MSG)
-        formWait->show();
+    /*if(countTics>COUNT_SHOW_MSG)
+        formWait->show();*/
 
     if(countTics==100)
     {
@@ -282,7 +256,7 @@ void TransferDataUDP::timerEvent(QTimerEvent *)
         else if(sendHReq.rwm==WRITE_REQUEST)
             str+=tr("Запись;");
         //! выдаем сообщение с ошибкой
-        formWait->setMessage(str+tr(" Статус: Ошибка - ")+tr("Проверь соединение!"));
+       // formWait->setMessage(str+tr(" Статус: Ошибка - ")+tr("Проверь соединение!"));
         for(int i=0;i<id_Timer.size();i++)
         {
             killTimer(id_Timer[i]);

@@ -1,11 +1,5 @@
-/*
- * VariantState.cpp
- *
- *  Created on: 16.09.2008
- *      Author: Fedor
- */
-
-#include "VariantState.h"
+﻿
+#include "variantState.h"
 
 VariantState::VariantState():Node()
 {

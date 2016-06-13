@@ -1,15 +1,9 @@
-/*
- * PModule.h
- *
- *  Created on: 27.08.2008
- *      Author: Fedor
- */
-
+﻿
 #ifndef PMODULE_H_
 #define PMODULE_H_
 
 #include <QStringList>
-#include "GenericNode.h"
+#include "genericNode.h"
 
 class PModule :public GenericNode
 {

@@ -1,14 +1,8 @@
-/*
- * Structure.cpp
- *
- *  Created on: 27.08.2008
- *      Author: Fedor
- */
-
-#include "Structure.h"
-#include "Parameter.h"
+﻿
+#include "structure.h"
+#include "parameter.h"
 #include "../globalFunc/math_func.h"
-#include "GroupLabel.h"
+#include "groupLabel.h"
 
 extern QStringList listForCompleter;
 
