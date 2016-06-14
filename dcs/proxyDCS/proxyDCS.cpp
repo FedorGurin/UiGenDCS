@@ -1,6 +1,15 @@
 #include "proxyDCS.h"
 
 
-ProxyDCS::ProxyDCS()
+ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
+
+}
+void ProxyDCS::slotRequest()
+{
+
+}
+bool ProxyDCS::sendRequest(RequestDCS* request)
+{
+
 }
