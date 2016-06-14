@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/svg">
+        <file alias="green">led-green.svg</file>
+        <file alias="red">led-red.svg</file>
+    </qresource>
+</RCC>
