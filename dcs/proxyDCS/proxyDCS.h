@@ -34,6 +34,7 @@ class RequestDCS
 //! Класс подключения к распределенной среде
 class ProxyDCS:public QObject
 {
+    Q_OBJECT;
 public:
     ProxyDCS(QObject* parent = 0);
 signals:
@@ -42,7 +43,6 @@ signals:
 public slots:
     //! отправление запроса
     void slotSendRequest(RequestDCS* req);
-
 private slots:
     //! отправление информации об текущем элементе
     void slotSendInfo();
@@ -58,9 +58,11 @@ private:
     QHostInfo info;
     //! порт с выдачей информации об самом себе(выдача каждые 3 сек.)
     int portInfo;
+    //! собственный IP адрес
+    QString ip_own;
     //! порт для самоидентификации
     QUdpSocket udpSockDef;
-    //! таймер для периодического сообщения о работе модуля(каждые 3 секунды)
+    //! таймер для периодического сообщения о работе модуля(каждые 3 сек.)
     QTimer timerInfo;
 };
 

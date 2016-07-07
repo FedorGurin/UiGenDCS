@@ -18,9 +18,9 @@ bool ProxyDCS::tryFindFreePort()
     do
     {
         portInfo=BASE_PORT+i;
-        isBind=udpSockDef.bind(portInfo,QUdpSocket::DefaultForPlatform);
+        isBind=udpSockDef.bind(QHostAddress::LocalHost,portInfo);//,QUdpSocket::DefaultForPlatform);
         i++;
-    }while(isBind == true);
+    }while(isBind == false);
 
     if(isBind == false)
     {
@@ -32,6 +32,8 @@ bool ProxyDCS::tryFindFreePort()
 
     //! сохраняем текущую информацию о хосте
     info=QHostInfo::fromName(QHostInfo::localHostName());
+    QList<QHostAddress> list = info.addresses();
+    ip_own = list[2].toString();
     //! подключение функции обработки таймера
     connect(&timerInfo,SIGNAL(timeout()),this,SLOT(slotSendInfo()));
     //! запуск таймера
@@ -41,6 +43,7 @@ bool ProxyDCS::tryFindFreePort()
 }
 void ProxyDCS::slotSendInfo()
 {
+    qDebug()<<"3 sec left";
 
 }
 
