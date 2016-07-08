@@ -11,6 +11,12 @@
 // Библиотека обеспечивает взаимодействие модулей между собой
 // у модуля есть два конфигурационных файла io.xml, interfaces.xml
 
+//! класс с информацией об модуле
+class DefineAddr
+{
+
+};
+
 //! статус запроса(в случае невозможности выполнения возвращает ошибку)
 class StatusRequest
 {
@@ -46,9 +52,13 @@ public slots:
 private slots:
     //! отправление информации об текущем элементе
     void slotSendInfo();
+    void slotReciveInfo();
+    //! попытка сообщить о себе другим участикам
+    //void slotTryToSpeak();
 private:
     //! попытка поиска свободного порта(true - порт найден)
     bool tryFindFreePort();
+
 
     //! список разделяемой памяти входных параметров
     QVector<QSharedMemory* > sharedMemInput;
@@ -56,14 +66,19 @@ private:
     QSharedMemory sharedMemOutput;
     //! информация о хосте
     QHostInfo info;
+    //! общий порт для всех приложений
+    int portShare;
     //! порт с выдачей информации об самом себе(выдача каждые 3 сек.)
     int portInfo;
     //! собственный IP адрес
     QString ip_own;
     //! порт для самоидентификации
     QUdpSocket udpSockDef;
+    QUdpSocket udpSockData;
     //! таймер для периодического сообщения о работе модуля(каждые 3 сек.)
     QTimer timerInfo;
+    //! таймер попытки подключения к порту portInfo
+    QTimer timerStarting;
 };
 
 #endif // PROXYDCS_H

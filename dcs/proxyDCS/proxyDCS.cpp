@@ -1,15 +1,58 @@
 #include "proxyDCS.h"
 
 //! начальный базовый порт с которого начинается поиск портов
-#define BASE_PORT 4900
+#define BASE_PORT 4910
+//! базовый порт использующийся при старте приложения
+#define BASE_PORT_STARTING 4901
+
 
 ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
-    //! порт для выдачи информации другим участникам РС
+    //! подключение к разделяемому порту
+    bool bindShared = false;
+    //! здесь нужно сформировать универсальный идентификатор
+
+    //! порт для выдачи информации другим участникам среды
     portInfo = 0;
-    //! поиск порта
+    //! общий порт
+    portShare = BASE_PORT_STARTING;
+    bindShared = udpSockDef.bind(QHostAddress::LocalHost,portShare,QUdpSocket::ReuseAddressHint);
+    if(bindShared == false)
+    {
+        qDebug()<<tr("ProxyDCS::Can`t bind to BASE_PORT_SHARED=")<<BASE_PORT_STARTING;
+        qDebug()<<tr("Closing application");
+        return;
+    }
+
+    //! поиск свободного порта
     tryFindFreePort();
+
+    //! получение идентификационных данных от других модулей
+    connect(&udpSockDef,SIGNAL(readyRead()),this,SLOT(slotReciveInfo()));
+
 }
+void ProxyDCS::slotReciveInfo()
+{
+    while (udpSockDef->hasPendingDatagrams())
+    {
+        QByteArray datagram;
+        datagram.resize(udpSocket->pendingDatagramSize());
+        QHostAddress sender;
+        quint16 senderPort;
+
+        udpSocket->readDatagram(datagram.data(), datagram.size(),
+        &sender, &senderPort);
+
+        processTheDatagram(datagram);
+    }
+}
+
+//! отправляю свои идентификационные данные
+/*void ProxyDCS::sendToActors()
+{
+  udpSockDef.writeDatagram(,info,portShare);
+}*/
+
 bool ProxyDCS::tryFindFreePort()
 {
     //! настройка сокетов(поиск свободного порта)
@@ -18,7 +61,7 @@ bool ProxyDCS::tryFindFreePort()
     do
     {
         portInfo=BASE_PORT+i;
-        isBind=udpSockDef.bind(QHostAddress::LocalHost,portInfo);//,QUdpSocket::DefaultForPlatform);
+        isBind=udpSockData.bind(QHostAddress::LocalHost,portInfo);//,QUdpSocket::DefaultForPlatform);
         i++;
     }while(isBind == false);
 
@@ -33,7 +76,7 @@ bool ProxyDCS::tryFindFreePort()
     //! сохраняем текущую информацию о хосте
     info=QHostInfo::fromName(QHostInfo::localHostName());
     QList<QHostAddress> list = info.addresses();
-    ip_own = list[2].toString();
+    ip_own = list[0].toString();
     //! подключение функции обработки таймера
     connect(&timerInfo,SIGNAL(timeout()),this,SLOT(slotSendInfo()));
     //! запуск таймера
@@ -43,8 +86,10 @@ bool ProxyDCS::tryFindFreePort()
 }
 void ProxyDCS::slotSendInfo()
 {
+    QByteArray array;
+    array.resize(10);
     qDebug()<<"3 sec left";
-
+    bool result=udpSockDef.writeDatagram(array,QHostAddress::LocalHost,portShare);
 }
 
 void ProxyDCS::slotSendRequest(RequestDCS* req)
