@@ -1,5 +1,6 @@
 #include "proxyDCS.h"
 
+#include <QDataStream>
 //! начальный базовый порт с которого начинается поиск портов
 #define BASE_PORT 4910
 //! базовый порт использующийся при старте приложения
@@ -14,7 +15,7 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 
     //! порт для выдачи информации другим участникам среды
     portInfo = 0;
-    //! общий порт
+    //! общий(разделяемый) порт
     portShare = BASE_PORT_STARTING;
     bindShared = udpSockDef.bind(QHostAddress::LocalHost,portShare,QUdpSocket::ReuseAddressHint);
     if(bindShared == false)
@@ -33,17 +34,20 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 }
 void ProxyDCS::slotReciveInfo()
 {
-    while (udpSockDef->hasPendingDatagrams())
+    int recivePort=0;
+    while (udpSockDef.hasPendingDatagrams())
     {
         QByteArray datagram;
-        datagram.resize(udpSocket->pendingDatagramSize());
-        QHostAddress sender;
-        quint16 senderPort;
+        datagram.resize(udpSockDef.pendingDatagramSize());
+        //QHostAddress sender;
+        //quint16 senderPort;
 
-        udpSocket->readDatagram(datagram.data(), datagram.size(),
+        QDataStream in(datagram);
+        in>>recivePort;
+        /*udpSocket.readDatagram(datagram.data(), datagram.size(),
         &sender, &senderPort);
 
-        processTheDatagram(datagram);
+        processTheDatagram(datagram);*/
     }
 }
 
@@ -87,7 +91,8 @@ bool ProxyDCS::tryFindFreePort()
 void ProxyDCS::slotSendInfo()
 {
     QByteArray array;
-    array.resize(10);
+    QDataStream out(array);
+    out<<portInfo;
     qDebug()<<"3 sec left";
     bool result=udpSockDef.writeDatagram(array,QHostAddress::LocalHost,portShare);
 }
