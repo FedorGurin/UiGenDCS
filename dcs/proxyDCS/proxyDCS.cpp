@@ -33,17 +33,17 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 }
 void ProxyDCS::slotReciveInfo()
 {
-    while (udpSockDef->hasPendingDatagrams())
+    while (udpSockDef.hasPendingDatagrams())
     {
-        QByteArray datagram;
-        datagram.resize(udpSocket->pendingDatagramSize());
+        /*QByteArray datagram;
+        datagram.resize(udpSocket.pendingDatagramSize());
         QHostAddress sender;
         quint16 senderPort;
 
-        udpSocket->readDatagram(datagram.data(), datagram.size(),
+        udpSocket.readDatagram(datagram.data(), datagram.size(),
         &sender, &senderPort);
 
-        processTheDatagram(datagram);
+        processTheDatagram(datagram);*/
     }
 }
 
