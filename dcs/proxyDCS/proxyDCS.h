@@ -11,11 +11,55 @@
 // Библиотека обеспечивает взаимодействие модулей между собой
 // у модуля есть два конфигурационных файла io.xml, interfaces.xml
 
+#define MAX_ADDR_IN_PACKET 16
+#define LENGTH_IP_STRING 64
 //! класс с информацией об модуле
-class DefineAddr
+struct DefineAddr
 {
-
+    //! глобальный уникальный идентификатор модуля
+    quint64 uid_module;
+    //! порт с выдачей информации об самом себе
+    int portModule;
+    //! собственный IP адрес
+    QString ip;
+    //! информация о хосте
+    QHostInfo info;
+    //! кол-во секунд после предыдущего обнавления
+    unsigned secLastConnect;
+    //! признак потери соединения с узлом
+    bool lostConnect;
 };
+//! заголовок запроса
+typedef struct THeadPacket_
+{
+    //! глобальный уникальный идентификатор модуля отправителя
+    quint64 uid_module;
+    //! Тип сообщения
+    char type; // 0 - пакет с информацией об узле
+    //! размер пакета
+    unsigned long size;
+}THeadPacket;
+
+typedef struct TAddr_
+{
+    //! идентификатор модуля
+    quint64 uid_module;
+    //! порт для работы с модулем
+    int portModule;
+    //! ip - адрес приложения
+    char ip[LENGTH_IP_STRING];
+}TAddr;
+
+//! Запрос с информацией об модуле
+typedef struct TInfoPacket_
+{
+    //! заголовок пакета
+    THeadPacket head;
+    //! кол-во адресов в спсике
+    int sizeAddr;
+    //! список адресов
+    TAddr addr[MAX_ADDR_IN_PACKET];
+}TInfoPacket;
 
 //! статус запроса(в случае невозможности выполнения возвращает ошибку)
 class StatusRequest
@@ -51,27 +95,40 @@ public slots:
     void slotSendRequest(RequestDCS* req);
 private slots:
     //! отправление информации об текущем элементе
-    void slotSendInfo();
-    void slotReciveInfo();
+    void slotSendInfoOwn();
+    //! отправить информации всем участникам среды
+    void slotSendInfoAll();
+    //! получение данных от других источников
+    void slotReciveFromSharePort();
+    void slotReciveFromDataPort();
     //! попытка сообщить о себе другим участикам
     //void slotTryToSpeak();
+
+    void checkSLOT();
 private:
-    //! попытка поиска свободного порта(true - порт найден)
+    //! попытка поиска свободных портов для отправки и получения(true - порт найден)
     bool tryFindFreePort();
+    //! проверка есть ли потеря соединения с узлами
+    void checkLostConnect();
 
-
+    //! разбор полученного пакета
+    void processPacket(QByteArray& datagram);
+    //! разбор пакета с информацией
+    void parseInfo(TInfoPacket& recivePacket);
+    //! список обнаруженных модулей
+    QVector<DefineAddr * > infoModules;
+    //! глобальный уникальный идентификатор модуля
+    //quint64 uid_module;
     //! список разделяемой памяти входных параметров
     QVector<QSharedMemory* > sharedMemInput;
     //! разделяемая память для выходных параметров
     QSharedMemory sharedMemOutput;
-    //! информация о хосте
-    QHostInfo info;
-    //! общий порт для всех приложений
+    //! информация о текущем модуле
+    DefineAddr info;
+    //! общий порт для всех приложений передаем информацию о приложении(выдача каждые 3 сек.)
     int portShare;
-    //! порт с выдачей информации об самом себе(выдача каждые 3 сек.)
-    int portInfo;
-    //! собственный IP адрес
-    QString ip_own;
+    //! признак ожидания и только прослушивания информации от других модулей
+    bool listeningInfo;
     //! порт для самоидентификации
     QUdpSocket udpSockDef;
     QUdpSocket udpSockData;
@@ -79,6 +136,10 @@ private:
     QTimer timerInfo;
     //! таймер попытки подключения к порту portInfo
     QTimer timerStarting;
+    //! структуры для сетевого обмена
+    TInfoPacket infoPacket;
+    TInfoPacket infoRecive;
+    THeadPacket headPacket;
 };
 
 #endif // PROXYDCS_H
