@@ -29,15 +29,15 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     //! порт для выдачи информации другим участникам среды
     info.portModule = 0;
     //! чтение IP из файла настройки
-    info.ip = readParamFromXMLFile("./setting.xml","Proxy","IP","127.0.0.1");
+    info.ip = readParamFromXMLFile(".\\setting.xml","Proxy","IP","127.0.0.1");
     //! общий порт для получения данных о загруженных модулях
     portShare = BASE_PORT_STARTING;
-    bindShared = udpSockDef.bind(QHostAddress::LocalHost,portShare,QUdpSocket::ReuseAddressHint);
+    bindShared = udpSockDef.bind(QHostAddress::Any,portShare,QUdpSocket::ReuseAddressHint);
 
     if(bindShared == false)
     {
         qDebug()<<tr("ProxyDCS::Can`t bind to BASE_PORT_SHARED=")<<BASE_PORT_STARTING;
-        qDebug()<<tr("ProxyDCS::Error = ")<<udpSockDef.errorString();
+        qDebug()<<tr("ProxyDCS::Error = ")<<udpSockDef.errorString()<<" Line = "<<__LINE__;
         qDebug()<<tr("ProxyDCS::Paused");
         return;
     }
@@ -69,10 +69,11 @@ void ProxyDCS::slotReciveFromDataPort()
         quint64 size = udpSockData.readDatagram(datagram.data(),
                                                datagram.size());
         if(size == -1)
-            qDebug()<<tr("ProxyDCS::Can`t readDatagram from socket");
+            qDebug()<<tr("ProxyDCS::Can`t readDatagram from socket")<<" LINE="<<__LINE__;
 
     }while  (udpSockData.hasPendingDatagrams());
 
+    //qDebug()<<"Recive from data port"<<" LINE="<<__LINE__;
     processPacket(datagram);
 }
 
@@ -88,9 +89,10 @@ void ProxyDCS::slotReciveFromSharePort()
         quint64 size = udpSockDef.readDatagram(datagram.data(),
                                                datagram.size());
         if(size == -1)
-            qDebug()<<tr("ProxyDCS::Can`t readDatagram from socket");
+            qDebug()<<tr("ProxyDCS::Can`t readDatagram from socket")<<" LINE="<<__LINE__;
 
     }while  (udpSockDef.hasPendingDatagrams());
+    //qDebug()<<"Recive from shared sockets"<<" LINE="<<__LINE__;;
     processPacket(datagram);
 }
 void ProxyDCS::parseInfo(TInfoPacket& recivePacket)
@@ -122,11 +124,11 @@ void ProxyDCS::parseInfo(TInfoPacket& recivePacket)
             newAddr->lostConnect = false;
 
             infoModules.append(newAddr);
-            qDebug()<<tr("ProxyDCS::add new Module to list, id_module=")<<newAddr->uid_module;
+            qDebug()<<tr("ProxyDCS::add new Module to list, id_module=")<<newAddr->uid_module<<" LINE="<<__LINE__;;
         }
     }
-    if(listeningInfo == false)
-        slotSendInfoAll();
+    //if(listeningInfo == false)
+    //    slotSendInfoAll();
 }
 
 void ProxyDCS::processPacket(QByteArray& datagram)
@@ -138,7 +140,7 @@ void ProxyDCS::processPacket(QByteArray& datagram)
     //! обнаружено эхо
     if(headPacket.uid_module == info.uid_module)
     {
-        qDebug()<<tr("ProxyDCS::echo detected");
+        //qDebug()<<tr("ProxyDCS::echo detected, ignore packet")<<" LINE="<<__LINE__;;
         return;
     }
 
@@ -159,22 +161,22 @@ bool ProxyDCS::tryFindFreePort()
     do
     {
         info.portModule = BASE_PORT+i;
-        isBind=udpSockData.bind(QHostAddress::LocalHost,info.portModule);//,QUdpSocket::DefaultForPlatform);
+        isBind=udpSockData.bind(QHostAddress(info.ip),info.portModule);//,QUdpSocket::DefaultForPlatform);
         i++;
     }while(isBind == false);
 
     if(isBind == false)
     {
-        qDebug()<<tr("ProxyDCS::Can`t find port for binding");
+        qDebug()<<tr("ProxyDCS::Can`t find port for binding")<<" LINE="<<__LINE__;;
         return false;
     }
 
-    qDebug()<<tr("ProxyDCS::Find port for information portModule=")<<info.portModule;
+    qDebug()<<tr("ProxyDCS::Find port for information portModule=")<<info.portModule<<" LINE="<<__LINE__;;
 
     //! сохраняем текущую информацию о хосте
     info.info=QHostInfo::fromName(QHostInfo::localHostName());
-    QList<QHostAddress> list = info.info.addresses();
-    info.ip = list[0].toString();
+    //QList<QHostAddress> list = info.info.addresses();
+    //info.ip = list[0].toString();
     //! подключение функции обработки таймера
     connect(&timerInfo,SIGNAL(timeout()),this,SLOT(slotSendInfoOwn()));
     //! запуск таймера
@@ -194,7 +196,7 @@ void ProxyDCS::checkLostConnect()
         if(infoModules[i]->secLastConnect>TIME_LOST_CONNECT)
         {
             infoModules[i]->lostConnect = true;
-            qDebug()<<tr("ProxyDCS::lost connection with id_module = ")<<infoModules[i]->uid_module;
+            qDebug()<<tr("ProxyDCS::lost connection with id_module = ")<<infoModules[i]->uid_module<<" LINE="<<__LINE__;;
         }
     }
 }
@@ -226,11 +228,11 @@ void ProxyDCS::slotSendInfoAll()
         {
             //! отправляем данные
             quint64 size=udpSockData.writeDatagram((char*)&infoForAll, infoForAll.head.size,
-                                                   QHostAddress::LocalHost,
+                                                   QHostAddress(infoModules[i]->ip),
                                                    infoModules[i]->portModule);
 
             if(size == -1)
-                qDebug()<<tr("ProxyDCS::Can`t send datainfo");
+                qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;;
         }
     }
 }
@@ -251,14 +253,14 @@ void ProxyDCS::slotSendInfoOwn()
     strcpy(infoPacket.addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
 
-    int status = udpSockDef.state();
+    //int status = udpSockDef.state();
     //qDebug()<<tr("ProxyDCS::sendInfo(3 sec left)");
     quint64 size=udpSockDef.writeDatagram((char*)&infoPacket, infoPacket.head.size,
-                                           QHostAddress::LocalHost,
+                                           QHostAddress::Broadcast,
                                            portShare);
 
     if(size == -1)
-        qDebug()<<tr("ProxyDCS::Can`t send datainfo");
+        qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;;
 }
 
 void ProxyDCS::slotSendRequest(RequestDCS* req)
