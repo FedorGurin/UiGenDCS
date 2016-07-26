@@ -1,5 +1,7 @@
 #include "proxyDCS.h"
 
+#include "../globalFunc/utils_func.h"
+
 #include <QTime>
 #include <QtGlobal>
 #include <QDataStream>
@@ -22,9 +24,12 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     infoModules.clear();
     //! здесь нужно сформировать универсальный идентификатор
     info.uid_module = qrand();
+    //! текущий идентификатор
     qDebug()<<tr("ProxyDCS:: UID_MODULE=")<<info.uid_module;
     //! порт для выдачи информации другим участникам среды
     info.portModule = 0;
+    //! чтение IP из файла настройки
+    info.ip = readParamFromXMLFile("./setting.xml","Proxy","IP","127.0.0.1");
     //! общий порт для получения данных о загруженных модулях
     portShare = BASE_PORT_STARTING;
     bindShared = udpSockDef.bind(QHostAddress::LocalHost,portShare,QUdpSocket::ReuseAddressHint);
@@ -146,13 +151,6 @@ void ProxyDCS::processPacket(QByteArray& datagram)
           parseInfo(infoRecive);
     }
 }
-
-//! отправляю свои идентификационные данные
-/*void ProxyDCS::sendToActors()
-{
-  udpSockDef.writeDatagram(,info,portShare);
-}*/
-
 bool ProxyDCS::tryFindFreePort()
 {
     //! настройка сокетов(поиск свободного порта)
