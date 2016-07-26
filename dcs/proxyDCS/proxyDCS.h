@@ -24,6 +24,8 @@ struct DefineAddr
     QString ip;
     //! информация о хосте
     QHostInfo info;
+    //! признак широковещания
+    bool broadcast;
     //! кол-во секунд после предыдущего обнавления
     unsigned secLastConnect;
     //! признак потери соединения с узлом
@@ -46,6 +48,8 @@ typedef struct TAddr_
     quint64 uid_module;
     //! порт для работы с модулем
     int portModule;
+    //! признак широковещания
+    bool broadcast;
     //! ip - адрес приложения
     char ip[LENGTH_IP_STRING];
 }TAddr;
@@ -129,6 +133,11 @@ private:
     int portShare;
     //! признак ожидания и только прослушивания информации от других модулей
     bool listeningInfo;
+    bool broadcast;
+    //! в секундах последнее обновление информации по разделяемому порту
+    int secLastConnectShared;
+    //! потеря соединения
+    bool lostConnectWithShared;
     //! порт для самоидентификации
     QUdpSocket udpSockDef;
     QUdpSocket udpSockData;

@@ -1,5 +1,5 @@
 #include <QCoreApplication>
-#include "../../proxyDCS/ProxyDCS.h"
+#include "../../proxyDCS/proxyDCS.h"
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
