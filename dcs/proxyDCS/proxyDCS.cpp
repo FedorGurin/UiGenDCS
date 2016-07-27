@@ -12,6 +12,7 @@
 
 #define TIME_INFO 3000 //3sec
 #define TIME_LOST_CONNECT 6500
+#define MAGIC_NUMBER 0x6871
 
 //! файл с описанием входов/выходов
 #define IO_FILE "io.xml"
@@ -60,8 +61,6 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     connect(&udpSockDef,SIGNAL(readyRead()),this,SLOT(slotReciveFromSharePort()));
     //! слот для отработки события "Потеря соединения с лидером"
     connect(&timerLostConnect,SIGNAL(timeout()),this,SLOT(checkLostConnect()));
-
-
 }
 void ProxyDCS::slotReciveFromDataPort()
 {
@@ -159,6 +158,8 @@ void ProxyDCS::processPacket(QByteArray& datagram)
     outHead.setVersion(QDataStream::Qt_4_2);
     outHead.readRawData((char*)&headPacket,sizeof(THeadPacket));
 
+    if(headPacket.magic_number !=MAGIC_NUMBER)
+        return;
     //! обнаружено эхо
     if(headPacket.uid_module == info.uid_module)
     {
@@ -218,19 +219,6 @@ void ProxyDCS::checkLostConnect()
     //! потеря соединения переход в режим широковещания
     broadcast = true;
     qDebug()<<tr("ProxyDCS::lost connection in id_module = ")<<info.uid_module<<" LINE="<<__LINE__;
-
-    //! поиск уже сохраненной информации в списке
-    /*for(int i=0;i<infoModules.size();i++)
-    {
-        infoModules[i]->secLastConnect += TIME_INFO;
-        if(infoModules[i]->lostConnect == true)
-            continue;
-        if(infoModules[i]->secLastConnect>TIME_LOST_CONNECT)
-        {
-            infoModules[i]->lostConnect = true;
-            qDebug()<<tr("ProxyDCS::lost connection with id_module = ")<<infoModules[i]->uid_module<<" LINE="<<__LINE__;;
-        }
-    }*/
 }
 //! отправление информации о текущем модуле
 void ProxyDCS::slotSendInfoAll()
@@ -238,6 +226,7 @@ void ProxyDCS::slotSendInfoAll()
     TPacket infoForAll;
     TInfo *infoAddr=(TInfo*)&infoForAll.data;
     int size = infoModules.size() + 1;
+    infoForAll.head.magic_number = MAGIC_NUMBER;
     infoForAll.head.size = sizeof(THeadPacket) +  sizeof(int) + size*sizeof(TAddr);
     infoForAll.head.type = 0;
     infoForAll.head.uid_module = info.uid_module;
@@ -270,8 +259,6 @@ void ProxyDCS::slotSendInfoAll()
                                                QHostAddress::Broadcast,
                                                portShare);
 #endif
-
-
         if(sizeData == -1)
             qDebug()<<tr("ProxyDCS::Can`t send broadcast")<<" LINE="<<__LINE__;
     }
@@ -287,31 +274,16 @@ void ProxyDCS::slotSendInfoAll()
     broadcast_prev = broadcast;
     //qDebug()<<"Send only me";
     slotSendInfoOwn();
-    /*
-    for(int i=0;i<infoModules.size();i++)
-    {
-        if(infoModules[i]->uid_module != info.uid_module && infoModules[i]->lostConnect == false)
-        {
-            //! отправляем данные
-            sizeData=udpSockData.writeDatagram((char*)&infoForAll, infoForAll.head.size,
-                                                   QHostAddress(infoModules[i]->ip),
-                                                   infoModules[i]->portModule);
-
-            if(sizeData == -1)
-                qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;;
-        }
-    }*/
 }
 
 //! отправление информации о текущем модуле
 void ProxyDCS::slotSendInfoOwn()
 {
-    //checkLostConnect();
-
     TInfo *infoAddr=(TInfo*)&infoPacket.data;
 
     infoAddr->sizeAddr = 1;
 
+    infoPacket.head.magic_number = MAGIC_NUMBER;
     infoPacket.head.uid_module = info.uid_module;
     infoPacket.head.type = 0;
     infoPacket.head.size =  sizeof(THeadPacket) +  sizeof(int) + infoAddr->sizeAddr*sizeof(TAddr);

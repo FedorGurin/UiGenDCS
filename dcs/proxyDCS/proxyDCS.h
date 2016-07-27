@@ -35,12 +35,16 @@ struct DefineAddr
 //! заголовок запроса
 typedef struct THeadPacket_
 {
+    //! распознование своих пакетов
+    uint32_t magic_number;
     //! глобальный уникальный идентификатор модуля отправителя
     uint32_t uid_module;
     //! Тип сообщения
-    char type; // 0 - пакет с информацией об узле
+    uint8_t type; // 0 - пакет с информацией об узле
     //! размер пакета
-    unsigned long size;
+    uint32_t size;
+    //! контрольная сумма
+    //uint32_t contrSum;
 }THeadPacket;
 
 typedef struct TAddr_
@@ -48,9 +52,9 @@ typedef struct TAddr_
     //! идентификатор модуля
     uint32_t uid_module;
     //! порт для работы с модулем
-    int portModule;
+    uint16_t portModule;
     //! признак широковещания
-    bool broadcast;
+    uint8_t broadcast;
     //! ip - адрес приложения
     char ip[LENGTH_IP_STRING];
 }TAddr;
@@ -66,10 +70,14 @@ typedef struct TPacket_
 typedef struct TInfo_
 {
     //! кол-во адресов в списке
-    int sizeAddr;
+    uint16_t sizeAddr;
     //! список адресов
     TAddr addr[MAX_ADDR_IN_PACKET];
 }TInfo;
+typedef struct TService_
+{
+
+}TService;
 
 //! статус запроса(в случае невозможности выполнения возвращает ошибку)
 class StatusRequest
