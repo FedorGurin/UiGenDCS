@@ -40,6 +40,7 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     info.portModule = 0;
     //! чтение IP из файла настройки
     info.ip = readParamFromXMLFile("./setting.xml","Proxy","IP","127.0.0.1");
+    info.name = readParamFromXMLFile("./setting.xml","Proxy","Name","Unknown");
     //! общий порт для получения данных о загруженных модулях
     portShare = BASE_PORT_STARTING;
     bindShared = udpSockDef.bind(QHostAddress::Any,portShare,QAbstractSocket::ShareAddress|QAbstractSocket::ReuseAddressHint);
@@ -61,6 +62,14 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     connect(&udpSockDef,SIGNAL(readyRead()),this,SLOT(slotReciveFromSharePort()));
     //! слот для отработки события "Потеря соединения с лидером"
     connect(&timerLostConnect,SIGNAL(timeout()),this,SLOT(checkLostConnect()));
+}
+void ProxyDCS::setNameModule(QString name)
+{
+    info.name = name;
+}
+QString ProxyDCS::nameModule()
+{
+    return info.name;
 }
 void ProxyDCS::slotReciveFromDataPort()
 {

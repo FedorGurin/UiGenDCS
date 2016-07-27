@@ -23,6 +23,8 @@ struct DefineAddr
     int portModule;
     //! собственный IP адрес
     QString ip;
+    //! имя модуля
+    QString name;
     //! информация о хосте
     QHostInfo info;
     //! признак широковещания
@@ -105,6 +107,9 @@ class ProxyDCS:public QObject
     Q_OBJECT;
 public:
     ProxyDCS(QObject* parent = 0);
+    //! имя программного модуля
+    void setNameModule(QString name);
+    QString nameModule();
 signals:
     //! получение запроса
     void signalReciveRequest(RequestDCS* req);
@@ -144,8 +149,9 @@ private:
     bool broadcast_prev;
     //! режим широковещания
     bool broadcast;
-    //! порт для самоидентификации
+    //! порт для широковещательной передачи
     QUdpSocket udpSockDef;
+    //! порт точечной передачи
     QUdpSocket udpSockData;
     //! таймер для периодического сообщения о работе модуля(каждые 3 сек.)
     QTimer timerInfo;
