@@ -7,17 +7,18 @@
 #include <QHostInfo>
 #include <QUdpSocket>
 #include <QTimer>
-
+#include <stdint.h>
 // Библиотека обеспечивает взаимодействие модулей между собой
 // у модуля есть два конфигурационных файла io.xml, interfaces.xml
 
 #define MAX_ADDR_IN_PACKET 16
 #define LENGTH_IP_STRING 64
+#define BUF_SIZE 2048
 //! класс с информацией об модуле
 struct DefineAddr
 {
     //! глобальный уникальный идентификатор модуля
-    quint64 uid_module;
+    uint32_t uid_module;
     //! порт с выдачей информации об самом себе
     int portModule;
     //! собственный IP адрес
@@ -27,15 +28,15 @@ struct DefineAddr
     //! признак широковещания
     bool broadcast;
     //! кол-во секунд после предыдущего обнавления
-    unsigned secLastConnect;
-    //! признак потери соединения с узлом
-    bool lostConnect;
+    //unsigned secLastConnect;
+    //! признак обновления данных
+    bool refresh;
 };
 //! заголовок запроса
 typedef struct THeadPacket_
 {
     //! глобальный уникальный идентификатор модуля отправителя
-    quint64 uid_module;
+    uint32_t uid_module;
     //! Тип сообщения
     char type; // 0 - пакет с информацией об узле
     //! размер пакета
@@ -45,7 +46,7 @@ typedef struct THeadPacket_
 typedef struct TAddr_
 {
     //! идентификатор модуля
-    quint64 uid_module;
+    uint32_t uid_module;
     //! порт для работы с модулем
     int portModule;
     //! признак широковещания
@@ -55,15 +56,20 @@ typedef struct TAddr_
 }TAddr;
 
 //! Запрос с информацией об модуле
-typedef struct TInfoPacket_
+typedef struct TPacket_
 {
     //! заголовок пакета
     THeadPacket head;
-    //! кол-во адресов в спсике
+    //! обобщенные данные
+    char data[BUF_SIZE];
+}TPacket;
+typedef struct TInfo_
+{
+    //! кол-во адресов в списке
     int sizeAddr;
     //! список адресов
     TAddr addr[MAX_ADDR_IN_PACKET];
-}TInfoPacket;
+}TInfo;
 
 //! статус запроса(в случае невозможности выполнения возвращает ошибку)
 class StatusRequest
@@ -105,24 +111,17 @@ private slots:
     //! получение данных от других источников
     void slotReciveFromSharePort();
     void slotReciveFromDataPort();
-    //! попытка сообщить о себе другим участикам
-    //void slotTryToSpeak();
-
-    void checkSLOT();
+    //! проверка есть ли потеря соединения с узлами
+    void checkLostConnect();
 private:
     //! попытка поиска свободных портов для отправки и получения(true - порт найден)
     bool tryFindFreePort();
-    //! проверка есть ли потеря соединения с узлами
-    void checkLostConnect();
-
     //! разбор полученного пакета
     void processPacket(QByteArray& datagram);
     //! разбор пакета с информацией
-    void parseInfo(TInfoPacket& recivePacket);
+    void parseInfo(TPacket& recivePacket);
     //! список обнаруженных модулей
     QVector<DefineAddr * > infoModules;
-    //! глобальный уникальный идентификатор модуля
-    //quint64 uid_module;
     //! список разделяемой памяти входных параметров
     QVector<QSharedMemory* > sharedMemInput;
     //! разделяемая память для выходных параметров
@@ -132,22 +131,21 @@ private:
     //! общий порт для всех приложений передаем информацию о приложении(выдача каждые 3 сек.)
     int portShare;
     //! признак ожидания и только прослушивания информации от других модулей
-    bool listeningInfo;
+    bool reciveFromShare;
+    //! признак широковещания на предыдущем шаге
+    bool broadcast_prev;
+    //! режим широковещания
     bool broadcast;
-    //! в секундах последнее обновление информации по разделяемому порту
-    int secLastConnectShared;
-    //! потеря соединения
-    bool lostConnectWithShared;
     //! порт для самоидентификации
     QUdpSocket udpSockDef;
     QUdpSocket udpSockData;
     //! таймер для периодического сообщения о работе модуля(каждые 3 сек.)
     QTimer timerInfo;
     //! таймер попытки подключения к порту portInfo
-    QTimer timerStarting;
+    QTimer timerLostConnect;
     //! структуры для сетевого обмена
-    TInfoPacket infoPacket;
-    TInfoPacket infoRecive;
+    TPacket infoPacket;
+    TPacket infoRecive;
     THeadPacket headPacket;
 };
 

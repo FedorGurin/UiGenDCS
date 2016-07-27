@@ -12,6 +12,11 @@
 
 #define TIME_INFO 3000 //3sec
 #define TIME_LOST_CONNECT 6500
+
+//! файл с описанием входов/выходов
+#define IO_FILE "io.xml"
+//! файл с описанием высокоуровневых команд обрабатываемых данным модулем
+#define INTERFACES_FILE "interfaces.xml"
 ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
     //! настройка генератора
@@ -19,11 +24,11 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     //! подключение к разделяемому порту
     bool bindShared = false;
     //! признак ожидания и только прослушивания информации от других модулей
-    listeningInfo = true;
+    reciveFromShare = true;
     //! все модули начинают с состояния broadcast
     broadcast = true;
-    lostConnectWithShared = false;
-    secLastConnectShared=0;
+    broadcast_prev = true;
+    qDebug()<<"Starting in major regime";
     //! обнуление обнаруженных модулей
     infoModules.clear();
     //! здесь нужно сформировать универсальный идентификатор
@@ -53,17 +58,11 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
         connect(&udpSockData,SIGNAL(readyRead()),this,SLOT(slotReciveFromDataPort()));
     //! получение идентификационных данных от других модулей
     connect(&udpSockDef,SIGNAL(readyRead()),this,SLOT(slotReciveFromSharePort()));
+    //! слот для отработки события "Потеря соединения с лидером"
+    connect(&timerLostConnect,SIGNAL(timeout()),this,SLOT(checkLostConnect()));
 
-    //! Только для проверки
-    connect(&udpSockDef,SIGNAL(connected()),this,SLOT(checkSLOT()));
-
-}
-void ProxyDCS::checkSLOT()
-{
-    qDebug()<<"SLOT";
 
 }
-
 void ProxyDCS::slotReciveFromDataPort()
 {
     QByteArray datagram;
@@ -86,7 +85,7 @@ void ProxyDCS::slotReciveFromSharePort()
     QByteArray datagram;
 
     //! нужно перестать слушать, перейти в состояние передачи информации всем узлам
-    listeningInfo = false;
+    reciveFromShare = false;
     do
     {
         datagram.resize(udpSockDef.pendingDatagramSize());
@@ -96,53 +95,62 @@ void ProxyDCS::slotReciveFromSharePort()
             qDebug()<<tr("ProxyDCS::Can`t readDatagram from socket")<<" LINE="<<__LINE__;
 
     }while  (udpSockDef.hasPendingDatagrams());
-    timerInfo.start(TIME_INFO);//3сек
+    //timerInfo.start(TIME_INFO);//3сек
+    timerLostConnect.start(TIME_LOST_CONNECT);
     //qDebug()<<"Recive from shared sockets"<<" LINE="<<__LINE__;;
     processPacket(datagram);
 }
-void ProxyDCS::parseInfo(TInfoPacket& recivePacket)
+void ProxyDCS::parseInfo(TPacket& recivePacket)
 {
-    for(int i=0;i<recivePacket.sizeAddr;i++)
+    //! приведение данных к требуемому виду
+    TInfo *infoAddr=(TInfo*)&recivePacket.data;
+    //! сбросить информацию об обновлении для всех элементов
+    for(int j=0;j<infoModules.size();j++)
+    {
+        infoModules[j]->refresh = false;
+    }
+    for(int i=0;i<infoAddr->sizeAddr;i++)
     {
         bool findModule=false;
-        if(recivePacket.addr[i].uid_module == info.uid_module)
+        if(infoAddr->addr[i].uid_module == info.uid_module)
             continue;
-        //! поиск уже сохраненной информации в списке
+        //! поиск уже сохраненной информации в списке и ее обновление
+        //! а так же помечаем те узлы с которыми была потеряна связь
         for(int j=0;j<infoModules.size();j++)
         {
-            if(recivePacket.addr[i].uid_module == infoModules[j]->uid_module)
+
+            if(infoAddr->addr[i].uid_module == infoModules[j]->uid_module)
             {
-                infoModules[j]->lostConnect = false;
-                infoModules[j]->secLastConnect = 0.0;
+                infoModules[j]->refresh = true;
+                //infoModules[j]->secLastConnect = 0.0;
                 findModule = true;
                 if(infoModules[j]->uid_module!=recivePacket.head.uid_module)
                     infoModules[j]->broadcast = false;
                 else
                     infoModules[j]->broadcast = true;
+                break; // остановить цикл поиска
             }
         }
         if(findModule == false)
         {
             //! сохраняем модуль в спсике
             DefineAddr *newAddr = new DefineAddr;
-            newAddr->ip = QString(recivePacket.addr[i].ip);
+            newAddr->ip = QString(infoAddr->addr[i].ip);
 
-            newAddr->portModule = recivePacket.addr[i].portModule;
-            newAddr->uid_module = recivePacket.addr[i].uid_module;
+            newAddr->portModule = infoAddr->addr[i].portModule;
+            newAddr->uid_module = infoAddr->addr[i].uid_module;
             if(newAddr->uid_module!= recivePacket.head.uid_module)
                 newAddr->broadcast = false;
             else
                 newAddr->broadcast = true;
             //newAddr->broadcast = recivePacket.addr[i].broadcast;
-            newAddr->secLastConnect = 0;
-            newAddr->lostConnect = false;
+            //newAddr->secLastConnect = 0;
+            newAddr->refresh = true;
 
             infoModules.append(newAddr);
             qDebug()<<tr("ProxyDCS::add new Module to list, id_module=")<<newAddr->uid_module<<" LINE="<<__LINE__;;
         }
     }
-    //if(listeningInfo == false)
-    //    slotSendInfoAll();
 }
 
 void ProxyDCS::processPacket(QByteArray& datagram)
@@ -155,22 +163,22 @@ void ProxyDCS::processPacket(QByteArray& datagram)
     if(headPacket.uid_module == info.uid_module)
     {
         //qDebug()<<tr("ProxyDCS::echo detected, ignore packet")<<" LINE="<<__LINE__;;
-        listeningInfo = true;
+        reciveFromShare = true;
         return;
     }
 
-    if(listeningInfo == false)
+    if(reciveFromShare == false)
         broadcast = false;
 
     QDataStream out(&datagram,QIODevice::ReadOnly);
     //out.setVersion(QDataStream::Qt_4_2);
 
-    if(headPacket.type == 0)
+    if(headPacket.type == 0) // пакет с информацией об узлах
     {
           out.readRawData((char*)&infoRecive,headPacket.size);
           parseInfo(infoRecive);
     }
-    listeningInfo = true;
+    reciveFromShare = true;
 }
 bool ProxyDCS::tryFindFreePort()
 {
@@ -199,20 +207,18 @@ bool ProxyDCS::tryFindFreePort()
     //! подключение функции обработки таймера
     connect(&timerInfo,SIGNAL(timeout()),this,SLOT(slotSendInfoAll()));
     //! запуск таймера
-    timerInfo.start(TIME_LOST_CONNECT);//3сек
+    //timerInfo.start(TIME_LOST_CONNECT);//3сек
+    timerInfo.start(TIME_INFO);//3сек
 
     return true;
 }
 //! проверка есть ли потеря соединения с узлами
 void ProxyDCS::checkLostConnect()
 {
-    secLastConnectShared += TIME_INFO;
-    if(secLastConnectShared>TIME_LOST_CONNECT)
-    {
-        lostConnectWithShared = true;
-        broadcast = true;
-        qDebug()<<tr("ProxyDCS::lost connection in id_module = ")<<info.uid_module<<" LINE="<<__LINE__;;
-    }
+    //! потеря соединения переход в режим широковещания
+    broadcast = true;
+    qDebug()<<tr("ProxyDCS::lost connection in id_module = ")<<info.uid_module<<" LINE="<<__LINE__;
+
     //! поиск уже сохраненной информации в списке
     /*for(int i=0;i<infoModules.size();i++)
     {
@@ -229,44 +235,56 @@ void ProxyDCS::checkLostConnect()
 //! отправление информации о текущем модуле
 void ProxyDCS::slotSendInfoAll()
 {
-   // checkLostConnect();
-
-    TInfoPacket infoForAll;
+    TPacket infoForAll;
+    TInfo *infoAddr=(TInfo*)&infoForAll.data;
     int size = infoModules.size() + 1;
     infoForAll.head.size = sizeof(THeadPacket) +  sizeof(int) + size*sizeof(TAddr);
     infoForAll.head.type = 0;
     infoForAll.head.uid_module = info.uid_module;
-    infoForAll.sizeAddr = size;
+    infoAddr->sizeAddr = size;
+
 
     //! добавляем текущий модуль
-    infoForAll.addr[0].uid_module = info.uid_module;
-    infoForAll.addr[0].broadcast = broadcast;
-    infoForAll.addr[0].portModule = info.portModule;
-    strcpy(infoForAll.addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
+    infoAddr->addr[0].uid_module   = info.uid_module;
+    infoAddr->addr[0].broadcast    = broadcast;
+    infoAddr->addr[0].portModule   = info.portModule;
+    strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
     for(int i=0;i<infoModules.size();i++)
     {
-        infoForAll.addr[i+1].uid_module = infoModules[i]->uid_module;
-        infoForAll.addr[i+1].portModule = infoModules[i]->portModule;
-        infoForAll.addr[i+1].broadcast = infoModules[i]->broadcast;
-        strcpy(infoForAll.addr[i+1].ip,(const char*)infoModules[i]->ip.toLocal8Bit().constData());
+        infoAddr->addr[i+1].uid_module = infoModules[i]->uid_module;
+        infoAddr->addr[i+1].portModule = infoModules[i]->portModule;
+        infoAddr->addr[i+1].broadcast  = infoModules[i]->broadcast;
+        strcpy(infoAddr->addr[i+1].ip,(const char*)infoModules[i]->ip.toLocal8Bit().constData());
     }
 
     qint64 sizeData = -1;
     if(broadcast == true)
     {
-
-        //qDebug()<<"Send broadcast";
+#if defined(Q_OS_LINUX)
         sizeData=udpSockDef.writeDatagram((char*)&infoForAll, infoForAll.head.size,
-                                                QHostAddress::Broadcast,
-                                               //QHostAddress("192.168.10.255"),//for linux
+                                               QHostAddress("192.168.10.255"),
                                                portShare);
+#else
+        sizeData=udpSockDef.writeDatagram((char*)&infoForAll, infoForAll.head.size,
+                                               QHostAddress::Broadcast,
+                                               portShare);
+#endif
+
 
         if(sizeData == -1)
             qDebug()<<tr("ProxyDCS::Can`t send broadcast")<<" LINE="<<__LINE__;
-        return ;
     }
 
+
+    if(broadcast == true && broadcast_prev == false)
+        qDebug()<<"Switch to major regime";
+
+    if(broadcast == false && broadcast_prev == true)
+        qDebug()<<"Switch to minor regime";
+
+
+    broadcast_prev = broadcast;
     //qDebug()<<"Send only me";
     slotSendInfoOwn();
     /*
@@ -290,16 +308,18 @@ void ProxyDCS::slotSendInfoOwn()
 {
     //checkLostConnect();
 
-    infoPacket.sizeAddr = 1;
+    TInfo *infoAddr=(TInfo*)&infoPacket.data;
+
+    infoAddr->sizeAddr = 1;
 
     infoPacket.head.uid_module = info.uid_module;
     infoPacket.head.type = 0;
-    infoPacket.head.size =  sizeof(THeadPacket) +  sizeof(int) + infoPacket.sizeAddr*sizeof(TAddr);
+    infoPacket.head.size =  sizeof(THeadPacket) +  sizeof(int) + infoAddr->sizeAddr*sizeof(TAddr);
 
-    infoPacket.addr[0].uid_module = info.uid_module;
-    infoPacket.addr[0].portModule = info.portModule;
-    infoPacket.addr[0].broadcast = false;
-    strcpy(infoPacket.addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
+    infoAddr->addr[0].uid_module = info.uid_module;
+    infoAddr->addr[0].portModule = info.portModule;
+    infoAddr->addr[0].broadcast = false;
+    strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
     qint64 sizeData=0;
     for(int i=0;i<infoModules.size();i++)
