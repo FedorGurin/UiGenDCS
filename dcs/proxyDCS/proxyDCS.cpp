@@ -256,14 +256,14 @@ void ProxyDCS::slotSendInfoAll()
     if(broadcast == true)
     {
 
-        qDebug()<<"Send broadcast";
+        //qDebug()<<"Send broadcast";
         sizeData=udpSockDef.writeDatagram((char*)&infoForAll, infoForAll.head.size,
                                                 QHostAddress::Broadcast,
                                                //QHostAddress("192.168.10.255"),//for linux
                                                portShare);
 
         if(sizeData == -1)
-            qDebug()<<tr("ProxyDCS::Can`t send broadcast")<<" LINE="<<__LINE__;;
+            qDebug()<<tr("ProxyDCS::Can`t send broadcast")<<" LINE="<<__LINE__;
         return ;
     }
 
@@ -309,7 +309,7 @@ void ProxyDCS::slotSendInfoOwn()
             sizeData=udpSockData.writeDatagram((char*)&infoPacket, infoPacket.head.size,
                                                    QHostAddress(infoModules[i]->ip),
                                                    infoModules[i]->portModule);
-            qDebug()<<"IP="<<infoModules[i]->ip<<"Port"<<infoModules[i]->portModule;
+            //qDebug()<<"IP="<<infoModules[i]->ip<<"Port"<<infoModules[i]->portModule;
             if(sizeData == -1)
                 qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;
             return;
