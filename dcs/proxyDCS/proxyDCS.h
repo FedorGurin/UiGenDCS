@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QSharedMemory>
+//#include <QSharedMemory>
 #include <QHostInfo>
 #include <QUdpSocket>
 #include <QTimer>
@@ -136,9 +136,9 @@ private:
     //! список обнаруженных модулей
     QVector<DefineAddr * > infoModules;
     //! список разделяемой памяти входных параметров
-    QVector<QSharedMemory* > sharedMemInput;
+    //QVector<QSharedMemory* > sharedMemInput;
     //! разделяемая память для выходных параметров
-    QSharedMemory sharedMemOutput;
+    //QSharedMemory sharedMemOutput;
     //! информация о текущем модуле
     DefineAddr info;
     //! общий порт для всех приложений передаем информацию о приложении(выдача каждые 3 сек.)
