@@ -22,7 +22,7 @@ public:
     //! Корень для дерева с описанием данных
     NodeProtocol* rootItemData;
 
-    NodeProtocol* rootNodeData(){return rootItemData;}
+    //NodeProtocol* rootNodeData(){return rootItemData;}
 
     //! форма с статусом загрузки
     //FormStatusExitProgram *formStatusExit;
@@ -31,7 +31,7 @@ public:
     virtual ~DomParser();
 private:
     //! разбор XML файла, и формирование дерева с описанием данных
-    void parseData(const QDomElement &element, GenericNode *parent);//рекурсивная
+    void parseData(const QDomElement &element, NodeProtocol *parent);//рекурсивная
 
     //! открыть XML файл с описанием данных
     bool openFileDesData(const QString&);

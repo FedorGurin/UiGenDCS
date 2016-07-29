@@ -8,6 +8,8 @@
 #include <QUdpSocket>
 #include <QTimer>
 #include <stdint.h>
+
+#include "domParserProtocol.h"
 // Библиотека обеспечивает взаимодействие модулей между собой
 // у модуля есть два конфигурационных файла io.xml, interfaces.xml
 
@@ -161,6 +163,8 @@ private:
     TPacket infoPacket;
     TPacket infoRecive;
     THeadPacket headPacket;
+    //! xml парсер
+    DomParser *parser;
 };
 
 #endif // PROXYDCS_H

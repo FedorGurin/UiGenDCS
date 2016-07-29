@@ -7,7 +7,7 @@
 #include <QCoreApplication>
 
 //#define PRINT_WARNING_LOAD_FILE
-
+#define PROTOCOL_FILE "protocol.xml"
 DomParser::DomParser(QObject *parent):QObject(parent)
 {
     //! дерево с описательной частью данных
@@ -16,7 +16,7 @@ DomParser::DomParser(QObject *parent):QObject(parent)
     rootItemData=0;
 
     //! открываем файл с содержимым описывающим данные
-    bool okDesData=openFileDesData(qApp->applicationDirPath()+"/xml/"+SettingXML::getInstance()->fileData);
+    bool okDesData=openFileDesData(qApp->applicationDirPath()+"/xml/"+PROTOCOL_FILE);
     if(okDesData==false)
     {
         rootItemData=0;
@@ -24,25 +24,19 @@ DomParser::DomParser(QObject *parent):QObject(parent)
     }
 }
 
-void DomParser::parseData(const QDomElement &element, GenericNode *parent)
+void DomParser::parseData(const QDomElement &element, NodeProtocol *parent)
 {
-    GenericNode *item=0;
+    NodeProtocol *item=0;
     QDomElement ele=element.firstChildElement();
     while(!ele.isNull())
     {
-        if(ele.tagName()=="pmodule")    {item=new PModule   (ele,parent);}
-        else if(ele.tagName()=="sio")   {item=new SIO       (ele,parent);}
-        else if(ele.tagName()=="param") {item=new Parameter (ele,parent);}
-        else if(ele.tagName()=="group") {item=new GroupLabel(ele,parent);}
+        if(ele.tagName()        == tr("BlockInputData"))    {item=new NodeInputBlock (ele,parent);}
+        else if(ele.tagName()   == tr("BlockOutputData"))   {item=new NodeOutputBlock(ele,parent);}
+        else if(ele.tagName()   == tr("UseCommand"))        {item=new NodeUseCommand (ele,parent);}
+        else if(ele.tagName()   == tr("DefCommand"))        {item=new NodeDefCommand (ele,parent);}
 
-        if(item!=0) parseData(ele,item);
-        if(ele.tagName()=="struct")
-        {
-            Structure *item=new Structure(ele,parent);
-            //! рекурсия в содержимое
+        if(item!=0)
             parseData(ele,item);
-            item->addMassiveStruct();
-        }
         item=0;
         ele=ele.nextSiblingElement();
     }
@@ -68,7 +62,7 @@ bool DomParser::openFileDesData(const QString &nameFile)
 
         if(readXML==true)
         {
-            rootItemData=new GenericNode;
+            rootItemData=new NodeProtocol;
             QDomElement root=domDesData.documentElement();
             parseData(root.toElement(),rootItemData);
         }

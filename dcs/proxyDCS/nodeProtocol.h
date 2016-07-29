@@ -4,13 +4,14 @@
 #include <QString>
 #include <QDomElement>
 #include <QList>
-
+#include <stdint.h>
 class NodeProtocol
 {
 public:
     NodeProtocol();
     //! тип узла
     enum Type{EMPTY,
+              BLOCK,
               BLOCK_INPUT_DATA,     /*блок описывающий входные данные*/
               BLOCK_OUTPUT_DATA,    /*блок описывающий выходные данные*/
               PARAM,                /*узел описывающий параметр*/
@@ -18,6 +19,8 @@ public:
               DEF_COMMAND};         /*узел объявляющий новую команду*/
 
     QString name;
+    QString pathName;
+
 
     //! добавить родителя
     void addParent(NodeProtocol* p)
@@ -57,8 +60,68 @@ public:
 
 
     virtual int type()const{return EMPTY;}
-    virtual ~Node();
+    virtual ~NodeProtocol();
 
 };
+class NodeBlock :public NodeProtocol
+{
+public:
+
+    NodeBlock (const QDomElement&,NodeProtocol *);
+
+    //! номер версии
+    QString version;
+    //! уникальный идентификатор
+    uint32_t uid;
+    //! имя модуля
+    QString nameModule;
+
+    int type()const{return NodeProtocol::BLOCK;}
+
+    virtual ~NodeBlock();
+};
+class NodeInputBlock :public NodeBlock
+{
+public:
+    NodeInputBlock (const QDomElement&,NodeProtocol *);
+    int type()const{return NodeProtocol::BLOCK_INPUT_DATA;}
+};
+class NodeOutputBlock :public NodeBlock
+{
+public:
+    NodeOutputBlock (const QDomElement&,NodeProtocol *);
+    int type()const{return NodeProtocol::BLOCK_OUTPUT_DATA;}
+
+};
+class NodeParam :public NodeBlock
+{
+public:
+    NodeParam (const QDomElement&,NodeProtocol *);
+    int type()const{return NodeProtocol::PARAM;}
+
+};
+//!
+class NodeUseCommand :public NodeBlock
+{
+public:
+    NodeUseCommand (const QDomElement&,NodeProtocol *);
+    QList<NodeParam* > args;
+    QList<NodeParam* > result;
+
+    int type()const{return NodeProtocol::USE_COMMAND;}
+
+};
+//! узел с командами
+class NodeDefCommand :public NodeBlock
+{
+public:
+    NodeDefCommand (const QDomElement&,NodeProtocol *);
+    QList<NodeParam* > args;
+    QList<NodeParam* > result;
+
+    int type()const{return NodeProtocol::DEF_COMMAND;}
+
+};
+
 
 #endif /* NODE_H_ */
