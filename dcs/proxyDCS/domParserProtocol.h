@@ -8,9 +8,6 @@
 #include "nodeProtocol.h"
 
 
-//XML файл с описанием данных
-#define DATA_FILE "protocol.xml"
-
 class DomParser : public QObject {
 
 public:

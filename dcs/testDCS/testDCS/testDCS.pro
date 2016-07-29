@@ -7,13 +7,20 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp \
-    ../../globalFunc/utils_func.cpp \
-    ../../proxyDCS/proxyDCS.cpp
+SOURCES +=  ../../globalFunc/utils_func.cpp \
+            ../../proxyDCS/domParserProtocol.cpp \
+            ../../proxyDCS/nodeProtocol.cpp \
+            ../../proxyDCS/proxyDCS.cpp \
+            main.cpp
+
+
 
 
 HEADERS += \
     ../../globalFunc/utils_func.h \
-    ../../proxyDCS/proxyDCS.h
+    ../../proxyDCS/domParserProtocol.h \
+    ../../proxyDCS/nodeProtocol.h \
+    ../../proxyDCS/proxyDCS.h \
+
 
 

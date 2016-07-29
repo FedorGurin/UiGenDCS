@@ -5,8 +5,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QCoreApplication>
+#include <QDebug>
 
-//#define PRINT_WARNING_LOAD_FILE
+
 #define PROTOCOL_FILE "protocol.xml"
 DomParser::DomParser(QObject *parent):QObject(parent)
 {
@@ -15,10 +16,12 @@ DomParser::DomParser(QObject *parent):QObject(parent)
     //! корень для дерева с описанием данных
     rootItemData=0;
 
+    QString nameFile = qApp->applicationDirPath()+"/"+PROTOCOL_FILE;
     //! открываем файл с содержимым описывающим данные
-    bool okDesData=openFileDesData(qApp->applicationDirPath()+"/xml/"+PROTOCOL_FILE);
+    bool okDesData=openFileDesData(nameFile);
     if(okDesData==false)
     {
+        qDebug()<<"DomParser: Can`t load file="<<nameFile;
         rootItemData=0;
         return;
     }
@@ -30,10 +33,11 @@ void DomParser::parseData(const QDomElement &element, NodeProtocol *parent)
     QDomElement ele=element.firstChildElement();
     while(!ele.isNull())
     {
-        if(ele.tagName()        == tr("BlockInputData"))    {item=new NodeInputBlock (ele,parent);}
-        else if(ele.tagName()   == tr("BlockOutputData"))   {item=new NodeOutputBlock(ele,parent);}
-        else if(ele.tagName()   == tr("UseCommand"))        {item=new NodeUseCommand (ele,parent);}
-        else if(ele.tagName()   == tr("DefCommand"))        {item=new NodeDefCommand (ele,parent);}
+        QString tagName = ele.tagName();
+        if(tagName        == tr("BlockInputData"))    {item=new NodeInputBlock (ele,parent);}
+        else if(tagName   == tr("BlockOutputData"))   {item=new NodeOutputBlock(ele,parent);}
+        else if(tagName   == tr("UseCommand"))        {item=new NodeUseCommand (ele,parent);}
+        else if(tagName   == tr("DefCommand"))        {item=new NodeDefCommand (ele,parent);}
 
         if(item!=0)
             parseData(ele,item);
@@ -69,6 +73,7 @@ bool DomParser::openFileDesData(const QString &nameFile)
         else
         {
             ok=false;
+            qDebug()<<"DomParser: Error in structure of xml";
            /* QMessageBox::warning(0,tr("Внимание"),
                                  tr("Ошибка в структуре XML файла = ")+SettingXML::getInstance()->fileData+"\n\nError msg="
                                  +errMsg+"\nLine="+QString::number(errLine)+"\nColumn="+QString::number(errColumn));*/

@@ -22,7 +22,7 @@
 #define INTERFACES_FILE "interfaces.xml"
 ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
-    parser = new DomParser;
+    parser = new DomParser();
     //! настройка генератора
     qsrand(QTime::currentTime().msec());
     //! подключение к разделяемому порту

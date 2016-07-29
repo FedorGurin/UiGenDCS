@@ -77,8 +77,6 @@ public:
     QString nameModule;
 
     int type()const{return NodeProtocol::BLOCK;}
-
-    virtual ~NodeBlock();
 };
 class NodeInputBlock :public NodeBlock
 {

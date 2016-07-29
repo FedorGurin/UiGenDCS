@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <data>
-<BlockInputData name = "Block1" version="0" uid="100" nameModule="MODULE">
+<BlockInputData name = "InputBlock1" version="0" uid="100" nameModule="MODULE">
 <param name = "value1" messure="m" type="int" ></param>
 <param name = "value2" messure="m" type="int" ></param>
 <param name = "value3" messure="m" type="int" ></param>
 <param name = "value4" messure="m" type="int" ></param>
-<BlockInputData/>
+</BlockInputData>
 
-<BlockOutputData name = "Block1" version="0" uid="100" nameModule="MODULE">
+<BlockOutputData name = "OutputBlock1" version="0" uid="100" nameModule="MODULE">
 <param name = "value1" messure="m" type="int" comment="" ></param>
 <param name = "value2" messure="m" type="int" comment=""></param>
 <param name = "value3" messure="m" type="int" comment=""></param>
 <param name = "value4" messure="m" type="int" comment=""></param>
-<BlockOutputData/>
+</BlockOutputData>
 
 
-<DefCommand name = "Command1" version="0" uid="100" nameModule="MODULE">
+<DefCommand name = "DefCommand1" version="0" uid="100" nameModule="MODULE">
 <param name = "value1" messure="m" type="int" direct="input" comment="Comment1" ></param>
 <param name = "value2" messure="m" type="int" direct="input" comment="Comment2"></param>
 <param name = "value3" messure="m" type="int" direct="output" comment="Comment3"></param>
 <param name = "value4" messure="m" type="int" direct="output" comment="Comment4"></param>
-<DefCommand/>
+</DefCommand>
 
 
-<UseCommand name = "Block1" version="0" uid="100" nameModule="MODULE">
-<UseCommand />
+<UseCommand name = "UseCommand1" version="0" uid="100" nameModule="MODULE">
+</UseCommand >
 </data>
