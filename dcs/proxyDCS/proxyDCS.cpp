@@ -5,6 +5,7 @@
 #include <QTime>
 #include <QtGlobal>
 #include <QDataStream>
+#include <QCoreApplication>
 //! начальный базовый порт с которого начинается поиск портов
 #define BASE_PORT 4910
 //! базовый порт использующийся при старте приложения
@@ -39,8 +40,8 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     //! порт для выдачи информации другим участникам среды
     info.portModule = 0;
     //! чтение IP из файла настройки
-    info.ip = readParamFromXMLFile("./setting.xml","Proxy","IP","127.0.0.1");
-    info.name = readParamFromXMLFile("./setting.xml","Proxy","Name","Unknown");
+    info.ip     = readParamFromXMLFile(qApp->applicationDirPath()+"setting.xml","Proxy","IP","127.0.0.1");
+    info.name   = readParamFromXMLFile(qApp->applicationDirPath()+"setting.xml","Proxy","Name","Unknown");
     //! общий порт для получения данных о загруженных модулях
     portShare = BASE_PORT_STARTING;
     bindShared = udpSockDef.bind(QHostAddress::Any,portShare,QAbstractSocket::ShareAddress|QAbstractSocket::ReuseAddressHint);

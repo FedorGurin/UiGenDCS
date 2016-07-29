@@ -12,9 +12,13 @@ TARGET = ProxyDCS
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += proxyDCS.cpp
+SOURCES += proxyDCS.cpp \
+    nodeProtocol.cpp \
+    domParserProtocol.cpp
 
-HEADERS += proxyDCS.h
+HEADERS += proxyDCS.h \
+    nodeProtocol.h \
+    domParserProtocol.h
 unix {
     target.path = /usr/lib
     INSTALLS += target
