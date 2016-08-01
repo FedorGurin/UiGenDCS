@@ -19,6 +19,9 @@ public:
     //! Корень для дерева с описанием данных
     NodeProtocol* rootItemData;
 
+    //! поиск блока по его идентфикатору
+    NodeBlock* findBlockNode(uint32_t uid_block);
+
     //NodeProtocol* rootNodeData(){return rootItemData;}
 
     //! форма с статусом загрузки

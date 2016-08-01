@@ -69,44 +69,69 @@ public:
 
     NodeBlock (const QDomElement&,NodeProtocol *);
 
-    //! номер версии
-    QString version;
     //! уникальный идентификатор
     uint32_t uid;
+    //! номер версии
+    QString version;
     //! имя модуля
     QString nameModule;
+    //! уникальный идентификатор модуля
+    uint32_t uid_module;
 
-    int type()const{return NodeProtocol::BLOCK;}
+    virtual int type()const{return NodeProtocol::BLOCK;}
 };
 class NodeInputBlock :public NodeBlock
 {
 public:
     NodeInputBlock (const QDomElement&,NodeProtocol *);
-    int type()const{return NodeProtocol::BLOCK_INPUT_DATA;}
+    virtual int type()const{return NodeProtocol::BLOCK_INPUT_DATA;}
 };
 class NodeOutputBlock :public NodeBlock
 {
 public:
     NodeOutputBlock (const QDomElement&,NodeProtocol *);
-    int type()const{return NodeProtocol::BLOCK_OUTPUT_DATA;}
+    virtual int type()const{return NodeProtocol::BLOCK_OUTPUT_DATA;}
 
 };
 class NodeParam :public NodeBlock
 {
 public:
+    //! тип данных
+    enum TypeData{DOUBLE=0,
+                  INT=1,
+                  FLOAT=2,
+                  BOOL=3,
+                  BIT=4,
+                  UCHAR=5,
+                  UINT=6,
+                  MCHAR=7,
+                  CHAR=8,
+                  INT16=9,
+                  LDOUBLE=10};
+    //! узел с параметрами
     NodeParam (const QDomElement&,NodeProtocol *);
-    int type()const{return NodeProtocol::PARAM;}
-
+    //! тип узла
+    virtual int type()const{return NodeProtocol::PARAM;}
+    //! ед. измерения
+    QString messure;
+    //! значение параметра
+    QString value;
+    //! Тип параметра
+    TypeData typeP;
+    //! комментарий
+    QString comment;
 };
 //!
 class NodeUseCommand :public NodeBlock
 {
 public:
     NodeUseCommand (const QDomElement&,NodeProtocol *);
+    //! список параметров с аргументами
     QList<NodeParam* > args;
+    //! список параметров с значениями
     QList<NodeParam* > result;
 
-    int type()const{return NodeProtocol::USE_COMMAND;}
+    virtual int type()const{return NodeProtocol::USE_COMMAND;}
 
 };
 //! узел с командами
@@ -114,10 +139,12 @@ class NodeDefCommand :public NodeBlock
 {
 public:
     NodeDefCommand (const QDomElement&,NodeProtocol *);
+    //! список параметров с аргументами
     QList<NodeParam* > args;
+    //! список параметров с значениями
     QList<NodeParam* > result;
 
-    int type()const{return NodeProtocol::DEF_COMMAND;}
+    virtual int type()const{return NodeProtocol::DEF_COMMAND;}
 
 };
 

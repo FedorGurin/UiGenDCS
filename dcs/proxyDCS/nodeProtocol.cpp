@@ -30,12 +30,30 @@ NodeInputBlock::NodeInputBlock(const QDomElement& element,
                                NodeProtocol *parent)
     :NodeBlock(element,parent)
 {
+    NodeProtocol *item=0;
+    QDomElement ele=element.firstChildElement();
+    while(!ele.isNull())
+    {
+        QString tagName = ele.tagName();
+        item=0;
+        if(tagName  == "param")    {item=new NodeParam(ele,this);}
+        ele=ele.nextSiblingElement();
+    }
 
 }
 NodeOutputBlock::NodeOutputBlock(const QDomElement& element,
                                NodeProtocol *parent)
     :NodeBlock(element,parent)
 {
+    NodeProtocol *item=0;
+    QDomElement ele=element.firstChildElement();
+    while(!ele.isNull())
+    {
+        QString tagName = ele.tagName();
+        item=0;
+        if(tagName  == "param")    {item=new NodeParam(ele,this);}
+        ele=ele.nextSiblingElement();
+    }
 
 }
 NodeUseCommand::NodeUseCommand(const QDomElement& element,
@@ -48,7 +66,15 @@ NodeDefCommand::NodeDefCommand(const QDomElement& element,
                                NodeProtocol *parent)
     :NodeBlock(element,parent)
 {
-
+    NodeProtocol *item=0;
+    QDomElement ele=element.firstChildElement();
+    while(!ele.isNull())
+    {
+        QString tagName = ele.tagName();
+        item=0;
+        if(tagName  == "param")    {item=new NodeParam(ele,this);}
+        ele=ele.nextSiblingElement();
+    }
 }
 NodeParam::NodeParam(const QDomElement& element,
                      NodeProtocol *parent)

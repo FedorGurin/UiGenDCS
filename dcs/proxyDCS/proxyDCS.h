@@ -71,6 +71,21 @@ typedef struct TPacket_
     //! обобщенные данные
     char data[BUF_SIZE];
 }TPacket;
+typedef struct TCommand_
+{
+    //! идентификатор команды
+    uint32_t uid_command;
+    //! идентификатор модуля который запрашивал обработку команды
+    uint32_t uid_answer;
+    //! признак того, что передаются аргументы
+    uint8_t args;
+    //! кол-во аргументов/результатов
+    uint8_t size;
+    //! список параметров с аргументами или результатами
+    char *data;
+
+}TCommand;
+
 typedef struct TInfo_
 {
     //! кол-во адресов в списке
@@ -91,17 +106,21 @@ class StatusRequest
 //! класс запроса
 class RequestDCS
 {
-    //! идентификатор группы (описание в input.xml)
-    QString name_group_id;
+public:
+    RequestDCS();
+    //! идентификатор группы (описание в protocol.xml)
+    //QString name_group_id;
+    //! идентификатор блока
+    uint32_t uid_block;
 
     //! циклический запрос или одиночный запрос
     bool cyclic;
 
+    //! поток для записи данных
+    QDataStream *stream;
+public:
     //! массив данных, которые пользователь сам разбирает в требуемом порядке(или QDataStream?)
     QByteArray data;
-
-    //! вернуть указатель на параметры
-
 };
 //! Класс подключения к распределенной среде
 class ProxyDCS:public QObject
@@ -117,8 +136,9 @@ signals:
     void signalReciveRequest(RequestDCS* req);
 public slots:
     //! отправление запроса
-    void slotSendRequest(RequestDCS* req);
+    void sendRequest(RequestDCS& req);
 private slots:
+
     //! отправление информации об текущем элементе
     void slotSendInfoOwn();
     //! отправить информации всем участникам среды
@@ -129,6 +149,9 @@ private slots:
     //! проверка есть ли потеря соединения с узлами
     void checkLostConnect();
 private:
+    DefineAddr* findAddrByIdModule(QString name);
+    //! отправить данные указаному хосту
+    void sendDataToHost(TPacket &packet,QString ip, int portModule);
     //! попытка поиска свободных портов для отправки и получения(true - порт найден)
     bool tryFindFreePort();
     //! разбор полученного пакета

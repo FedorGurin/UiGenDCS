@@ -1,12 +1,9 @@
-
 #include "domParserProtocol.h"
-
 
 #include <QFile>
 #include <QTextStream>
 #include <QCoreApplication>
 #include <QDebug>
-
 
 #define PROTOCOL_FILE "protocol.xml"
 DomParser::DomParser(QObject *parent):QObject(parent)
@@ -26,7 +23,19 @@ DomParser::DomParser(QObject *parent):QObject(parent)
         return;
     }
 }
-
+//! поиск блока
+NodeBlock* DomParser::findBlockNode(uint32_t uid_block)
+{
+    for(int i=0;i<rootItemData->child.size();i++)
+    {
+        NodeBlock *node = (NodeBlock*)(rootItemData->child[i]);
+        if(node->uid == uid_block)
+        {
+            return node;
+        }
+    }
+    return 0;
+}
 void DomParser::parseData(const QDomElement &element, NodeProtocol *parent)
 {
     NodeProtocol *item=0;
@@ -39,8 +48,8 @@ void DomParser::parseData(const QDomElement &element, NodeProtocol *parent)
         else if(tagName   == tr("UseCommand"))        {item=new NodeUseCommand (ele,parent);}
         else if(tagName   == tr("DefCommand"))        {item=new NodeDefCommand (ele,parent);}
 
-        if(item!=0)
-            parseData(ele,item);
+       /* if(item!=0)
+            parseData(ele,item);*/
         item=0;
         ele=ele.nextSiblingElement();
     }

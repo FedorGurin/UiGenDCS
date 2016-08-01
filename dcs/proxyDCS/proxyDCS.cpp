@@ -20,6 +20,12 @@
 #define IO_FILE "io.xml"
 //! файл с описанием высокоуровневых команд обрабатываемых данным модулем
 #define INTERFACES_FILE "interfaces.xml"
+
+
+RequestDCS::RequestDCS()
+{
+    stream=new QDataStream(data);
+}
 ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
     parser = new DomParser();
@@ -288,6 +294,17 @@ void ProxyDCS::slotSendInfoAll()
     slotSendInfoOwn();
 }
 
+void ProxyDCS::sendDataToHost(TPacket &packet,QString ip, int portModule)
+{
+    qint64 sizeData=0;
+
+    sizeData=udpSockData.writeDatagram((char*)&packet, packet.head.size,
+                                           QHostAddress(ip),
+                                           portModule);
+    if(sizeData == -1)
+        qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;
+}
+
 //! отправление информации о текущем модуле
 void ProxyDCS::slotSendInfoOwn()
 {
@@ -305,23 +322,47 @@ void ProxyDCS::slotSendInfoOwn()
     infoAddr->addr[0].broadcast = false;
     strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
-    qint64 sizeData=0;
     for(int i=0;i<infoModules.size();i++)
     {
         if(infoModules[i]->broadcast!= false)
         {
-            sizeData=udpSockData.writeDatagram((char*)&infoPacket, infoPacket.head.size,
-                                                   QHostAddress(infoModules[i]->ip),
-                                                   infoModules[i]->portModule);
-            //qDebug()<<"IP="<<infoModules[i]->ip<<"Port"<<infoModules[i]->portModule;
-            if(sizeData == -1)
-                qDebug()<<tr("ProxyDCS::Can`t send datainfo")<<" LINE="<<__LINE__;
+            sendDataToHost(infoPacket,
+                           infoModules[i]->ip,
+                           infoModules[i]->portModule);
+
             return;
         }
     }
 }
-
-void ProxyDCS::slotSendRequest(RequestDCS* req)
+DefineAddr* ProxyDCS::findAddrByIdModule(QString name)
 {
+    for(int i=0;i<infoModules.size();i++)
+    {
+        if(infoModules[i]->name == name)
+        {
+            return infoModules[i];
+        }
+    }
+    return 0;
+}
+
+//! отправление запроса
+void ProxyDCS::sendRequest(RequestDCS& req)
+{
+    NodeBlock *block = parser->findBlockNode(req.uid_block);
+    if(block!=0)
+    {
+        TPacket packet;
+        //! !!!!! НУЖНО ПРАВИЛЬНО ЗАПОЛНИТЬ PACKET
+        //! ВЫБРАТЬ ПРАВИЛЬНЫЙ ТИП ПАКЕТА
+        //!
+
+        DefineAddr *addr = findAddrByIdModule(block->nameModule);
+        if(addr != 0)
+        {
+            //! здесь нужно подготовить пакет для отправки в требуемый модуль
+            sendDataToHost(packet,addr->ip,addr->portModule);
+        }
+    }
 
 }
