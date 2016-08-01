@@ -13,12 +13,12 @@ DomParser::DomParser(QObject *parent):QObject(parent)
     //! корень для дерева с описанием данных
     rootItemData=0;
 
-    QString nameFile = qApp->applicationDirPath()+"/"+PROTOCOL_FILE;
+    QString fileName = qApp->applicationDirPath()+"/"+PROTOCOL_FILE;
     //! открываем файл с содержимым описывающим данные
-    bool okDesData=openFileDesData(nameFile);
+    bool okDesData=openFileDesData(fileName);
     if(okDesData==false)
     {
-        qDebug()<<"DomParser: Can`t load file="<<nameFile;
+        //qDebug()<<"DomParser: Can`t load file="<<fileName;
         rootItemData=0;
         return;
     }
@@ -54,14 +54,14 @@ void DomParser::parseData(const QDomElement &element, NodeProtocol *parent)
         ele=ele.nextSiblingElement();
     }
 }
-bool DomParser::openFileDesData(const QString &nameFile)
+bool DomParser::openFileDesData(const QString &fileName)
 {
     //! DOM - дерево c  описанием данных
     QDomDocument domDesData;
 
-    QFile file(nameFile);
+    QFile file(fileName);
     bool openFile=false;
-    bool ok=true;
+
 
     openFile=file.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -81,8 +81,9 @@ bool DomParser::openFileDesData(const QString &nameFile)
         }
         else
         {
-            ok=false;
-            qDebug()<<"DomParser: Error in structure of xml";
+
+            qDebug()<<"DomParser: Error in structure of xml"<<"errLine="<<errLine<<" errColumn="<<errColumn<<" file = "<<fileName;
+            return false;
            /* QMessageBox::warning(0,tr("Внимание"),
                                  tr("Ошибка в структуре XML файла = ")+SettingXML::getInstance()->fileData+"\n\nError msg="
                                  +errMsg+"\nLine="+QString::number(errLine)+"\nColumn="+QString::number(errColumn));*/
@@ -92,11 +93,12 @@ bool DomParser::openFileDesData(const QString &nameFile)
     }
     else
     {
-        ok=false;
+        qDebug()<<"DomParser: Can`t open file = "<<fileName;
+        return false;
         /*QMessageBox::warning(0,tr("Внимание"),
                              tr("Файл не найден = ")+SettingXML::getInstance()->fileData);*/
     }
-    return ok;
+    return true;
 }
 
 
