@@ -1,4 +1,4 @@
-QT += core network
+QT += core network xml
 QT -= gui
 
 TARGET = testDCS
@@ -7,9 +7,20 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += main.cpp \
-    ../../proxyDCS/proxyDCS.cpp
+SOURCES +=  ../../globalFunc/utils_func.cpp \
+            ../../proxyDCS/domParserProtocol.cpp \
+            ../../proxyDCS/nodeProtocol.cpp \
+            ../../proxyDCS/proxyDCS.cpp \
+            main.cpp
+
+
+
 
 HEADERS += \
-    ../../proxyDCS/proxyDCS.h
+    ../../globalFunc/utils_func.h \
+    ../../proxyDCS/domParserProtocol.h \
+    ../../proxyDCS/nodeProtocol.h \
+    ../../proxyDCS/proxyDCS.h \
+
+
 

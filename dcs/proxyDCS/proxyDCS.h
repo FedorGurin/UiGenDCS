@@ -3,63 +3,100 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QSharedMemory>
+//#include <QSharedMemory>
 #include <QHostInfo>
 #include <QUdpSocket>
 #include <QTimer>
+#include <stdint.h>
 
+#include "domParserProtocol.h"
 // Библиотека обеспечивает взаимодействие модулей между собой
 // у модуля есть два конфигурационных файла io.xml, interfaces.xml
 
 #define MAX_ADDR_IN_PACKET 16
 #define LENGTH_IP_STRING 64
+#define BUF_SIZE 2048
 //! класс с информацией об модуле
 struct DefineAddr
 {
     //! глобальный уникальный идентификатор модуля
-    quint64 uid_module;
+    uint32_t uid_module;
     //! порт с выдачей информации об самом себе
     int portModule;
     //! собственный IP адрес
     QString ip;
+    //! имя модуля
+    QString name;
     //! информация о хосте
     QHostInfo info;
+    //! признак широковещания
+    bool broadcast;
     //! кол-во секунд после предыдущего обнавления
-    unsigned secLastConnect;
-    //! признак потери соединения с узлом
-    bool lostConnect;
+    //unsigned secLastConnect;
+    //! признак обновления данных
+    bool refresh;
 };
 //! заголовок запроса
 typedef struct THeadPacket_
 {
+    //! распознование своих пакетов
+    uint32_t magic_number;
     //! глобальный уникальный идентификатор модуля отправителя
-    quint64 uid_module;
+    uint32_t uid_module;
     //! Тип сообщения
-    char type; // 0 - пакет с информацией об узле
+    uint8_t type; // 0 - пакет с информацией об узле
     //! размер пакета
-    unsigned long size;
+    uint32_t size;
+    //! контрольная сумма
+    //uint32_t contrSum;
 }THeadPacket;
 
 typedef struct TAddr_
 {
     //! идентификатор модуля
-    quint64 uid_module;
+    uint32_t uid_module;
     //! порт для работы с модулем
-    int portModule;
+    uint16_t portModule;
+    //! признак широковещания
+    uint8_t broadcast;
     //! ip - адрес приложения
     char ip[LENGTH_IP_STRING];
 }TAddr;
 
 //! Запрос с информацией об модуле
-typedef struct TInfoPacket_
+typedef struct TPacket_
 {
     //! заголовок пакета
     THeadPacket head;
-    //! кол-во адресов в спсике
-    int sizeAddr;
+    //! обобщенные данные
+    char data[BUF_SIZE];
+}TPacket;
+typedef struct TCommand_
+{
+    //! идентификатор команды
+    uint32_t uid_command;
+    //! идентификатор модуля который запрашивал обработку команды
+    uint32_t uid_answer;
+    //! признак того, что передаются аргументы
+    uint8_t args;
+    //! кол-во аргументов/результатов
+    uint8_t size;
+    //! список параметров с аргументами или результатами
+    char *data;
+
+}TCommand;
+
+typedef struct TInfo_
+{
+    //! кол-во адресов в списке
+    uint16_t sizeAddr;
     //! список адресов
     TAddr addr[MAX_ADDR_IN_PACKET];
-}TInfoPacket;
+}TInfo;
+typedef struct TService_
+{
+
+}TService;
 
 //! статус запроса(в случае невозможности выполнения возвращает ошибку)
 class StatusRequest
@@ -69,17 +106,21 @@ class StatusRequest
 //! класс запроса
 class RequestDCS
 {
-    //! идентификатор группы (описание в input.xml)
-    QString name_group_id;
+public:
+    RequestDCS();
+    //! идентификатор группы (описание в protocol.xml)
+    //QString name_group_id;
+    //! идентификатор блока
+    uint32_t uid_block;
 
     //! циклический запрос или одиночный запрос
     bool cyclic;
 
+    //! поток для записи данных
+    QDataStream *stream;
+public:
     //! массив данных, которые пользователь сам разбирает в требуемом порядке(или QDataStream?)
     QByteArray data;
-
-    //! вернуть указатель на параметры
-
 };
 //! Класс подключения к распределенной среде
 class ProxyDCS:public QObject
@@ -87,13 +128,17 @@ class ProxyDCS:public QObject
     Q_OBJECT;
 public:
     ProxyDCS(QObject* parent = 0);
+    //! имя программного модуля
+    void setNameModule(QString name);
+    QString nameModule();
 signals:
     //! получение запроса
     void signalReciveRequest(RequestDCS* req);
 public slots:
     //! отправление запроса
-    void slotSendRequest(RequestDCS* req);
+    void sendRequest(RequestDCS& req);
 private slots:
+
     //! отправление информации об текущем элементе
     void slotSendInfoOwn();
     //! отправить информации всем участникам среды
@@ -101,45 +146,48 @@ private slots:
     //! получение данных от других источников
     void slotReciveFromSharePort();
     void slotReciveFromDataPort();
-    //! попытка сообщить о себе другим участикам
-    //void slotTryToSpeak();
-
-    void checkSLOT();
-private:
-    //! попытка поиска свободных портов для отправки и получения(true - порт найден)
-    bool tryFindFreePort();
     //! проверка есть ли потеря соединения с узлами
     void checkLostConnect();
-
+private:
+    DefineAddr* findAddrByIdModule(QString name);
+    //! отправить данные указаному хосту
+    void sendDataToHost(TPacket &packet,QString ip, int portModule);
+    //! попытка поиска свободных портов для отправки и получения(true - порт найден)
+    bool tryFindFreePort();
     //! разбор полученного пакета
     void processPacket(QByteArray& datagram);
     //! разбор пакета с информацией
-    void parseInfo(TInfoPacket& recivePacket);
+    void parseInfo(TPacket& recivePacket);
     //! список обнаруженных модулей
     QVector<DefineAddr * > infoModules;
-    //! глобальный уникальный идентификатор модуля
-    //quint64 uid_module;
     //! список разделяемой памяти входных параметров
-    QVector<QSharedMemory* > sharedMemInput;
+    //QVector<QSharedMemory* > sharedMemInput;
     //! разделяемая память для выходных параметров
-    QSharedMemory sharedMemOutput;
+    //QSharedMemory sharedMemOutput;
     //! информация о текущем модуле
     DefineAddr info;
     //! общий порт для всех приложений передаем информацию о приложении(выдача каждые 3 сек.)
     int portShare;
     //! признак ожидания и только прослушивания информации от других модулей
-    bool listeningInfo;
-    //! порт для самоидентификации
+    bool reciveFromShare;
+    //! признак широковещания на предыдущем шаге
+    bool broadcast_prev;
+    //! режим широковещания
+    bool broadcast;
+    //! порт для широковещательной передачи
     QUdpSocket udpSockDef;
+    //! порт точечной передачи
     QUdpSocket udpSockData;
     //! таймер для периодического сообщения о работе модуля(каждые 3 сек.)
     QTimer timerInfo;
     //! таймер попытки подключения к порту portInfo
-    QTimer timerStarting;
+    QTimer timerLostConnect;
     //! структуры для сетевого обмена
-    TInfoPacket infoPacket;
-    TInfoPacket infoRecive;
+    TPacket infoPacket;
+    TPacket infoRecive;
     THeadPacket headPacket;
+    //! xml парсер
+    DomParser *parser;
 };
 
 #endif // PROXYDCS_H

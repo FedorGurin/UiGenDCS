@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<data>
+<BlockInputData name = "InputBlock1" version="0" uid="100" nameModule="MODULE">
+<param name = "value1" messure="m" type="int" ></param>
+<param name = "value2" messure="m" type="int" ></param>
+<param name = "value3" messure="m" type="int" ></param>
+<param name = "value4" messure="m" type="int" ></param>
+</BlockInputData>
+
+<BlockOutputData name = "OutputBlock1" version="0" uid="100" nameModule="MODULE">
+<param name = "value1" messure="m" type="int" comment="" ></param>
+<param name = "value2" messure="m" type="int" comment=""></param>
+<param name = "value3" messure="m" type="int" comment=""></param>
+<param name = "value4" messure="m" type="int" comment=""></param>
+</BlockOutputData>
+
+
+<DefCommand name = "DefCommand1" version="0" uid="100" nameModule="MODULE">
+<param name = "value1" messure="m" type="int" direct="input" comment="Comment1" ></param>
+<param name = "value2" messure="m" type="int" direct="input" comment="Comment2"></param>
+<param name = "value3" messure="m" type="int" direct="output" comment="Comment3"></param>
+<param name = "value4" messure="m" type="int" direct="output" comment="Comment4"></param>
+</DefCommand>
+
+
+<UseCommand name = "UseCommand1" version="0" uid="100" nameModule="MODULE">
+</UseCommand >
+</data>
