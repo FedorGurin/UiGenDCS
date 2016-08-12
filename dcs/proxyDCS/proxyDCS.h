@@ -73,7 +73,7 @@ typedef struct TPacket_
 }TPacket;
 typedef struct TCommand_
 {
-    //! идентификатор команды
+    //! идентификатор команды(идентификатор блока)
     uint32_t uid_command;
     //! идентификатор модуля который запрашивал обработку команды
     uint32_t uid_answer;
@@ -117,11 +117,30 @@ public:
     bool cyclic;
 
     //! поток для записи данных
-    QDataStream *stream;
-public:
+//    QDataStream *stream;
+//public:
     //! массив данных, которые пользователь сам разбирает в требуемом порядке(или QDataStream?)
     QByteArray data;
 };
+//! запрос на выполнение команды
+class CommandRequestDCS:public RequestDCS
+{
+public:
+    //! добавить аргумент в команду(здесь тоже нужно обратиься в описание)
+    bool append(QString arg)
+    {
+        listArg<<arg;
+    }
+    //! вернуть результат по порядку(здесь нужно обратиться в описание)
+    QString get(int num)
+    {
+        return listRes[num];
+    }
+
+    QList<QString> listArg;//список аргументов
+    QList<QString> listRes;//список результатов
+};
+
 //! Класс подключения к распределенной среде
 class ProxyDCS:public QObject
 {

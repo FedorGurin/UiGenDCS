@@ -18,10 +18,10 @@ NodeProtocol::~NodeProtocol()
 }
 NodeBlock::NodeBlock(const QDomElement& element,NodeProtocol *parent):NodeProtocol()
 {
-    name        = element.attribute("name","Unknown");
-    version     = element.attribute("version","0");
-    uid         = element.attribute("uid","-1").toInt();
-    nameModule  = element.attribute("nameModule","Unknown");
+    name        = element.attribute("name",         "Unknown");
+    version     = element.attribute("version",      "0");
+    uid         = element.attribute("uid",          "-1").toInt();
+    nameModule  = element.attribute("nameModule",   "Unknown");
 
     parent->addChild(this);
     addParent(parent);

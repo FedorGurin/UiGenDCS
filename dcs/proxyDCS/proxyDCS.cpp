@@ -24,7 +24,7 @@
 
 RequestDCS::RequestDCS()
 {
-    stream=new QDataStream(data);
+    //stream=new QDataStream(data);
 }
 ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
 {
@@ -310,16 +310,16 @@ void ProxyDCS::slotSendInfoOwn()
 {
     TInfo *infoAddr=(TInfo*)&infoPacket.data;
 
-    infoAddr->sizeAddr = 1;
+    infoAddr->sizeAddr              = 1;
 
-    infoPacket.head.magic_number = MAGIC_NUMBER;
-    infoPacket.head.uid_module = info.uid_module;
-    infoPacket.head.type = 0;
+    infoPacket.head.magic_number    = MAGIC_NUMBER;
+    infoPacket.head.uid_module      = info.uid_module;
+    infoPacket.head.type            = 0;
     infoPacket.head.size =  sizeof(THeadPacket) +  sizeof(int) + infoAddr->sizeAddr*sizeof(TAddr);
 
     infoAddr->addr[0].uid_module = info.uid_module;
     infoAddr->addr[0].portModule = info.portModule;
-    infoAddr->addr[0].broadcast = false;
+    infoAddr->addr[0].broadcast  = false;
     strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
     for(int i=0;i<infoModules.size();i++)
