@@ -126,6 +126,11 @@ public:
 class CommandRequestDCS:public RequestDCS
 {
 public:
+    CommandRequestDCS(QString nameId):RequestDCS()
+    {
+
+    }
+
     //! добавить аргумент в команду(здесь тоже нужно обратиься в описание)
     bool append(QString arg)
     {
