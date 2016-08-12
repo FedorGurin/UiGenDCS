@@ -6,9 +6,14 @@ int main(int argc, char *argv[])
 
     ProxyDCS *proxyDCS = new ProxyDCS();
 
-    RequestDCS req;
+    CommandRequestDCS req;
     req.uid_block = 102;
     req.cyclic = 0;
+
+    //! отправляем команду
+    req.append("Value1","value");
+    req.append("Value2","value");
+    req.append("Value3","value");
 
     proxyDCS->sendRequest(req);
     return a.exec();

@@ -44,8 +44,8 @@ public:
 
     NodeProtocol *parent;//родителький элемент
 
-    NodeProtocol *left; //элемент левее
-    NodeProtocol *right;//элемент правее
+    NodeProtocol *left; //элемент левее, если 0, то элемента не существует
+    NodeProtocol *right;//элемент правее, если 0, то элемента не существует
 
     NodeProtocol* leftNode()// вернуть узел слева
     {
