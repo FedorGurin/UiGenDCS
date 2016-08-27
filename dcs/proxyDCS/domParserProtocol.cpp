@@ -9,17 +9,17 @@
 DomParser::DomParser(QObject *parent):QObject(parent)
 {
     //! дерево с описательной частью данных
-    dataNodes=0;
+    dataNodes   = 0;
     //! корень для дерева с описанием данных
-    rootItemData=0;
-
+    rootItemData= 0;
+    //! имя файла с протоколом
     QString fileName = qApp->applicationDirPath()+"/"+PROTOCOL_FILE;
     //! открываем файл с содержимым описывающим данные
-    bool okDesData=openFileDesData(fileName);
-    if(okDesData==false)
+    bool okDesData = openFileDesData(fileName);
+    if(okDesData == false)
     {
         //qDebug()<<"DomParser: Can`t load file="<<fileName;
-        rootItemData=0;
+        rootItemData = 0;
         return;
     }
 }
@@ -60,23 +60,22 @@ bool DomParser::openFileDesData(const QString &fileName)
     QDomDocument domDesData;
 
     QFile file(fileName);
+
     bool openFile=false;
-
-
     openFile=file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     if(openFile==true)
     {
-        bool readXML=false;
-        QString errMsg="";
-        int errLine=0;
-        int errColumn=0;
+        bool readXML    = false;
+        QString errMsg  = "";
+        int errLine     = 0;
+        int errColumn   = 0;
         readXML=domDesData.setContent(&file,true,&errMsg,&errLine,&errColumn);
 
         if(readXML==true)
         {
-            rootItemData=new NodeProtocol;
-            QDomElement root=domDesData.documentElement();
+            rootItemData    = new NodeProtocol;
+            QDomElement root= domDesData.documentElement();
             parseData(root.toElement(),rootItemData);
         }
         else

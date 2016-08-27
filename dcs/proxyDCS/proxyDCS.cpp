@@ -48,8 +48,8 @@ ProxyDCS::ProxyDCS(QObject *parent):QObject(parent)
     //! порт для выдачи информации другим участникам среды
     info.portModule = 0;
     //! чтение IP из файла настройки
-    info.ip     = readParamFromXMLFile(qApp->applicationDirPath()+"/"+SETTING_FILE,"Proxy","IP","127.0.0.1");
-    info.name   = readParamFromXMLFile(qApp->applicationDirPath()+"/"+SETTING_FILE,"Proxy","Name","Unknown");
+    info.ip     = readParamFromXMLFile(qApp->applicationDirPath()+"/"+SETTING_FILE,"Proxy","IP",    "127.0.0.1");
+    info.name   = readParamFromXMLFile(qApp->applicationDirPath()+"/"+SETTING_FILE,"Proxy","Name",  "Unknown");
     //! общий порт для получения данных о загруженных модулях
     portShare = BASE_PORT_STARTING;
     bindShared = udpSockDef.bind(QHostAddress::Any,portShare,QAbstractSocket::ShareAddress|QAbstractSocket::ReuseAddressHint);
