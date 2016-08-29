@@ -97,17 +97,17 @@ class NodeParam :public NodeBlock
 {
 public:
     //! тип данных
-    enum TypeData{DOUBLE=0,
-                  INT=1,
-                  FLOAT=2,
-                  BOOL=3,
-                  BIT=4,
-                  UCHAR=5,
-                  UINT=6,
-                  MCHAR=7,
-                  CHAR=8,
-                  INT16=9,
-                  LDOUBLE=10};
+    enum TypeData{DOUBLE    = 0,
+                  INT       = 1,
+                  FLOAT     = 2,
+                  BOOL      = 3,
+                  BIT       = 4,
+                  UCHAR     = 5,
+                  UINT      = 6,
+                  MCHAR     = 7,
+                  CHAR      = 8,
+                  INT16     = 9,
+                  LDOUBLE   = 10};
     //! узел с параметрами
     NodeParam (const QDomElement&,NodeProtocol *);
     //! тип узла

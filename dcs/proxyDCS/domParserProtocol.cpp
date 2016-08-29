@@ -26,6 +26,8 @@ DomParser::DomParser(QObject *parent):QObject(parent)
 //! поиск блока
 NodeBlock* DomParser::findBlockNode(uint32_t uid_block)
 {
+    if(rootItemData == 0)
+        return 0;
     for(int i=0;i<rootItemData->child.size();i++)
     {
         NodeBlock *node = (NodeBlock*)(rootItemData->child[i]);

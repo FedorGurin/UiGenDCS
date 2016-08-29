@@ -274,7 +274,7 @@ void ProxyDCS::slotSendInfoAll()
                                                portShare);
 #else
         sizeData=udpSockDef.writeDatagram((char*)&infoForAll, infoForAll.head.size,
-                                               QHostAddress::Broadcast,
+                                               QHostAddress::LocalHost,//QHostAddress::Broadcast,
                                                portShare);
 #endif
         if(sizeData == -1)

@@ -134,9 +134,10 @@ public:
     }
 
     //! добавить аргумент в команду(здесь тоже нужно обратиься в описание)
-    bool append(QString arg)
+    bool append(QString name,QString arg)
     {
         listArg<<arg;
+        return true;
     }
     //! вернуть результат по порядку(здесь нужно обратиться в описание)
     QString get(int num)
