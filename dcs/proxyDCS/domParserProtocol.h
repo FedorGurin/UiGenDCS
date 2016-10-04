@@ -7,6 +7,7 @@
 
 #include "nodeProtocol.h"
 
+//! класс парсер XML файлов
 
 class DomParser : public QObject {
 
