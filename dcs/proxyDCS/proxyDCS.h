@@ -108,17 +108,19 @@ class RequestDCS
 {
 public:
     RequestDCS();
-    //! идентификатор группы (описание в protocol.xml)
-    //QString name_group_id;
-    //! идентификатор блока
+
+    //! идентификатор блока команды(указан в protocol.xml)
     uint32_t uid_block;
 
-    //! циклический запрос или одиночный запрос
+    //! циклический запрос или одиночный запрос()
     bool cyclic;
 
-    //! поток для записи данных
-//    QDataStream *stream;
-//public:
+    //! функция подготовки запроса
+    virtual void prepare()
+    {
+
+    }
+
     //! массив данных, которые пользователь сам разбирает в требуемом порядке(или QDataStream?)
     QByteArray data;
 };
@@ -132,9 +134,10 @@ public:
     }
 
     //! добавить аргумент в команду(здесь тоже нужно обратиься в описание)
-    bool append(QString arg)
+    bool append(QString name,QString arg)
     {
         listArg<<arg;
+        return true;
     }
     //! вернуть результат по порядку(здесь нужно обратиться в описание)
     QString get(int num)
@@ -162,7 +165,6 @@ public slots:
     //! отправление запроса
     void sendRequest(RequestDCS& req);
 private slots:
-
     //! отправление информации об текущем элементе
     void slotSendInfoOwn();
     //! отправить информации всем участникам среды

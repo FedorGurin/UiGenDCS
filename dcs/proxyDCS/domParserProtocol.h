@@ -1,7 +1,7 @@
 #ifndef DOMPARSER_PROTOCOL_H_
 #define DOMPARSER_PROTOCOL_H_
 
-#include <QDomElement>
+//#include <QDomElement>
 #include <QDomDocument>
 #include <QObject>
 
