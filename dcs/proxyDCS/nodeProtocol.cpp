@@ -92,9 +92,85 @@ NodeDefCommand::NodeDefCommand(const QDomElement& element,
         ele=ele.nextSiblingElement();
     }
 }
+char* NodeParam::binData(NodeParam* node)
+{
+    if(node->bin==0)
+        node->bin=new char[node->bytes];
+
+    switch(node->typeP)
+    {
+    case LDOUBLE:
+    {
+        long double p=node->value.toDouble()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case DOUBLE:
+    {
+        double p=node->value.toDouble()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case INT:
+    {
+        int p=node->value.toInt()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case FLOAT:
+    {
+        float p=node->value.toFloat()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case BOOL:
+    {
+        int p=node->value.toInt();
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case BIT:
+    {
+
+        break;
+    }
+    case UCHAR:
+    {
+        quint8 p=node->value.toUInt()*((uint)node->factorValue);
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case CHAR:
+    {
+        qint8 p=node->value.toInt()*((int)node->factorValue);
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case INT16:
+    {
+        quint16 p=node->value.toInt()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case UINT:
+    {
+        unsigned p=node->value.toUInt()*node->factorValue;
+        memcpy(node->bin,&p,node->bytes);
+        break;
+    }
+    case MCHAR:
+    {
+        memcpy(node->bin,node->value.toLatin1().data(),node->bytes);
+        break;
+    }
+    };
+
+    return node->bin;
+}
 NodeParam::NodeParam(const QDomElement& element,
                      NodeProtocol *parent)
     :NodeBlock(element,parent)
 {
+    bin = 0;
 
 }
