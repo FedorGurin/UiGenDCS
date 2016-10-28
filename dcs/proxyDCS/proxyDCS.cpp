@@ -11,10 +11,10 @@
 //! базовый порт использующийся при старте приложения
 #define BASE_PORT_STARTING 4901
 
-#define TIME_INFO 3000 //3sec
-#define TIME_LOST_CONNECT 6500
-#define MAGIC_NUMBER 0x6871
-#define SETTING_FILE "setting.xml"
+#define TIME_INFO           3000 //3sec
+#define TIME_LOST_CONNECT   6500
+#define MAGIC_NUMBER        0x6871
+#define SETTING_FILE        "setting.xml"
 
 //! файл с описанием входов/выходов
 #define IO_FILE "io.xml"
