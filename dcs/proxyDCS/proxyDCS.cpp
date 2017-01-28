@@ -117,6 +117,10 @@ void ProxyDCS::slotReciveFromSharePort()
     //qDebug()<<"Recive from shared sockets"<<" LINE="<<__LINE__;;
     processPacket(datagram);
 }
+void ProxyDCS::parseCommand(TPacket& recivePacket)
+{
+
+}
 void ProxyDCS::parseInfo(TPacket& recivePacket)
 {
     //! приведение данных к требуемому виду
@@ -196,7 +200,12 @@ void ProxyDCS::processPacket(QByteArray& datagram)
     {
           out.readRawData((char*)&infoRecive,headPacket.size);
           parseInfo(infoRecive);
+    }else if(headPacket.type == 1)
+    {
+        out.readRawData((char*)&infoRecive,headPacket.size);
+        parseCommand(infoRecive);
     }
+
     reciveFromShare = true;
 }
 bool ProxyDCS::tryFindFreePort()

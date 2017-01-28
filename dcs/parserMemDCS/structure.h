@@ -1,24 +1,24 @@
-﻿
-#ifndef STRUCTURE_H_
+﻿#ifndef STRUCTURE_H_
 #define STRUCTURE_H_
-#include "genericNode.h"
 
-class Structure: public GenericNode {
+#include "node.h"
+
+class Structure: public Node {
 public:
     Structure(const QDomElement&,
-              GenericNode *);
+              Node *);
 
     Structure(const Structure*,
-              GenericNode *glParent=0 /*глобальный родитель*/);
+              Node *glParent=0 /*глобальный родитель*/);
 
     //! Битовая структура
     bool isFieldBits;
 
     //! номер начального бита
-    quint32 numStartBit;
+    quint8 numStartBit;
 
     //! номер конечного бита
-    quint32 numEndBit;
+    quint8 numEndBit;
 
     //! признак того, что нумерация как в МКИО
     bool mkio;

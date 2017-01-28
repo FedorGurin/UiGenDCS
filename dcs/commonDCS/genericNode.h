@@ -1,5 +1,4 @@
-﻿
-#ifndef GENERICNODE_H_
+﻿#ifndef GENERICNODE_H_
 #define GENERICNODE_H_
 
 #include "node.h"
@@ -18,12 +17,7 @@ public:
     virtual void addBytes(char b);
     //! Признак отображать пользователю данный узел или нет(true - )
     bool isDisplay;
-    //! имя файлы
-    QString fileNameHelps;
-    //! данные в справке
-    QString dataHelps;
-    //! признак наличия справки
-    bool isHaveHelps;
+
     //! потомки которые видимы пользователю
     QList<Node* > childVision;
     //! добавить потомка в список видимых элементов
@@ -41,20 +35,8 @@ public:
             if(((GenericNode*)child[i])->isDisplay==true) count++;
         }
         return count;
-    }   
-    //! соединить дерево
-    virtual void joinTree(Node*);
-
-    void setZeroVariantNode()
-    {
-        variantNode=0;
-        for(int i=0;i<child.size();i++)
-        {
-            GenericNode* tempNode=(GenericNode*)child[i];
-            tempNode->setZeroVariantNode();
-        }
     }
-    Node *variantNode;
+
     virtual ~GenericNode();
 };
 

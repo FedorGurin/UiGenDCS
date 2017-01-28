@@ -1,19 +1,10 @@
-﻿/*
- * Parameter.h
- *
- *  Created on: 27.08.2008
- *      Author: Fedor
- */
-
-#ifndef PARAMETER_H_
+﻿#ifndef PARAMETER_H_
 #define PARAMETER_H_
 
-
-#include "genericNode.h"
+#include "node.h"
 #include <QVariant>
-#include <QAbstractItemModel>
 
-class Parameter: public GenericNode
+class Parameter: public Node
 {
 public:
     //! тип данных
@@ -30,11 +21,10 @@ public:
                   LDOUBLE   = 10};
 
 
-    Parameter(const QDomElement&, GenericNode*);
+    Parameter(const QDomElement&, Node*);
 
     Parameter(const Parameter* nodeNeedCopy,Node *glParent=0 /*глобальный элемент*/);
 
-//    Parameter(const Parameter* nodeNeedCopy, const GenericNode *bindNode);//к. копирования
     //! добавить массив с таким же параметрами
     void addMassiveParam(void);
 
@@ -134,15 +124,6 @@ public:
 
     //! признак наличия списка с перечислениями
     bool hasEnum;
-
-    //! признак циклического опроса данных
-    bool cycle_request;
-
-    //! способ редактирования
-    TypeEdit modeEdit;
-
-    //! способ редактирования и индикации
-    TypeIndication modeIndication;
 
     //! данное поле отображает долготу или широту
     bool fiLamda;
