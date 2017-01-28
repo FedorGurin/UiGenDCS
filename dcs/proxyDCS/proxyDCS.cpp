@@ -355,16 +355,43 @@ DefineAddr* ProxyDCS::findAddrByIdModule(QString name)
     return 0;
 }
 
+void ProxyDCS::recursSetData(NodeBlock * node,QDataStream &in)
+{
+    for(int i=0;i<node->child.size();i++)
+    {
+        NodeBlock *tempNode=node->child[i];
+        if(tempNode->type() == Node::PARAM)
+        {
+            Parameter* param=static_cast<Parameter*> (tempNode);
+            if(param->alignBytes!=0)
+            {
+               in.writeRawData(Parameter::alignArray,param->alignBytes);
+               // dumpForm->addValue(param->offset-param->alignBytes,tr(" (")+QString::number(param->alignBytes)+tr(") байт, выравнивание"),param->alignBytes);
+            }
+            //dumpForm->addValue(param->offset,param->value+tr(" (")+param->typeStr+tr(") байт")+param->displayName,param->bytes);
+            in.writeRawData(Parameter::binData(param),param->bytes);
+            qDebug("name=%s, bytes=%d, offset=%d\n",qPrintable(param->displayName),param->bytes,param->offset);
+        }
+    }
+}
 //! отправление запроса
 void ProxyDCS::sendRequest(RequestDCS& req)
 {
     NodeBlock *block = parser->findBlockNode(req.uid_block);
     if(block!=0)
     {
+        QByteArray datagram;
+        QDataStream in(&datagram, QIODevice::WriteOnly);
+
+        in.setVersion(QDataStream::Qt_4_2);
+        in.setByteOrder(QDataStream::LittleEndian);//закомментировать только для отладки
+        recursSetData(block,in);
+
         TPacket packet;
         //! !!!!! НУЖНО ПРАВИЛЬНО ЗАПОЛНИТЬ PACKET
         //! ВЫБРАТЬ ПРАВИЛЬНЫЙ ТИП ПАКЕТА
         //!
+
 
         DefineAddr *addr = findAddrByIdModule(block->nameModule);
         if(addr != 0)
