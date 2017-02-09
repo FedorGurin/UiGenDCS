@@ -3,19 +3,14 @@
 
 
 GenericNode::GenericNode() :Node(){
-    // TODO Auto-generated constructor stub
-    parent=0;
+
     child.clear();
-    typeTree=DATA;
-    variantNode=0;
-    isDisplay=true;
-    isHaveHelps=false;
-    dataHelps="";
-    fileNameHelps="";
-    offset=0;
-    directAddr=0;
-    bytes=0;
-    alignBytes=0;
+    parent      = 0;
+    isDisplay   = true;
+    offset      = 0;
+    directAddr  = 0;
+    bytes       = 0;
+    alignBytes  = 0;
 }
 
 void GenericNode::addBytes(char b)
@@ -30,22 +25,6 @@ void GenericNode::addBytes(char b)
         }
     }
 }
-
-void GenericNode::joinTree(Node *nodes)
-{
-    for(int i=0;i<this->child.size();i++)
-    {
-        for(int j=0;j<nodes->child.size();j++)
-        {
-            //qDebug()<<"DataNode is "<<displayName<<"VariantNode is "<<nodes->displayName;
-            if(child[i]->idName==nodes->child[j]->idName)
-            {
-                ((GenericNode*)(this->child[i]))->joinTree(nodes->child[j]);
-            }
-        }
-    }
-}
 GenericNode::~GenericNode() {
-    // TODO Auto-generated destructor stub
-    //qDeleteAll(child);
+
 }

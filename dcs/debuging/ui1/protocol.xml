@@ -23,7 +23,34 @@
 <param name = "value4" messure="m" type="char" bytes="80" direct="output" comment="Comment4"></param>
 </DefCommand>
 
+<DefCommand name = "ControlStick" version="0" uid="108" nameModule="SubModel">
+<param name = "x_rus" messure="m" type="float" direct="input" defaultValue="0" comment="Значение ручки по горизонтали" ></param>
+<param name = "y_rus" messure="m" type="float" direct="input" defaultValue="0" comment="Значение ручки по вертикали"></param>
+<param name = "idObj" messure="m" type="uint32_t" direct="input" defaultValue="0" comment="Уникальный идентификатор объекта"></param>
+<param name = "classId" messure="m" type="uint32_t" direct="input" comment="Уникальный идентфикатор класса объекта"></param>
+</DefCommand>
+
+<DefCommand name = "FlightProp" version="0" uid="109" nameModule="SubModel">
+<param name = "prope" messure="m" type="uint32_t" direct="input" defaultValue="0" comment="Слово признаков" ></param>
+<param name = "idObj" messure="m" type="uint32_t" direct="input" defaultValue="0" comment="Уникальный идентификатор объекта"></param>
+</DefCommand>
+
+<DefCommand name = "EventListUID" version="0" uid="302" nameModule="SubModel">
+
+<struct name >
+	<param name = "classUID" messure="m" type="int" direct="input" defaultValue="0" comment="Comment1" ></param>
+	<param name = "uid" messure="m" type="int" direct="input" defaultValue="0" comment="Comment2"></param>
+</struct>
+</DefCommand>
+
 
 <UseCommand name = "Block1" version="0" uid="103" nameModule="MODULE2">
 </UseCommand >
+<UseCommand name = "EventListUID" version="0" uid="103" nameModule="SubModel">
+</UseCommand >
+<UseCommand name = "ControlStick" version ="0" uid ="104" nameModeule = "SubModule">
+</UseCommand >
+<UseCommand name = "FlightProp" version ="0" uid ="104" nameModeule = "SubModule">
+</UseCommand >
+
 </data>
