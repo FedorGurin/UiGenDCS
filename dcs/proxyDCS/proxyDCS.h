@@ -15,6 +15,7 @@
 
 #define MAX_ADDR_IN_PACKET 16
 #define LENGTH_IP_STRING 64
+#define LENGTH_NAME_STRING 96
 #define BUF_SIZE 2048
 //! класс с информацией об модуле
 struct DefineAddr
@@ -44,7 +45,7 @@ typedef struct THeadPacket_
     //! глобальный уникальный идентификатор модуля отправителя
     uint32_t uid_module;
     //! Тип сообщения
-    uint8_t type; // 0 - пакет с информацией об узле
+    uint8_t type; // 0 - пакет с информацией об узле, 1 - данные
     //! размер пакета
     uint32_t size;
     //! контрольная сумма
@@ -61,6 +62,8 @@ typedef struct TAddr_
     uint8_t broadcast;
     //! ip - адрес приложения
     char ip[LENGTH_IP_STRING];
+    //! имя модуля
+    char name[LENGTH_NAME_STRING];
 }TAddr;
 
 //! Запрос с информацией об модуле
@@ -111,6 +114,9 @@ public:
 
     //! идентификатор блока команды(указан в protocol.xml)
     uint32_t uid_block;
+
+    //! версия команды
+    uint32_t version;
 
     //! циклический запрос или одиночный запрос()
     bool cyclic;
