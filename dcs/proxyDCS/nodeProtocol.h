@@ -5,6 +5,8 @@
 #include <QDomElement>
 #include <QList>
 #include <stdint.h>
+
+//! базовый класс для всех узлов
 class NodeProtocol
 {
 public:
@@ -20,6 +22,8 @@ public:
 
     QString name;
     QString pathName;
+
+
 
 
     //! добавить родителя
@@ -63,6 +67,7 @@ public:
     virtual ~NodeProtocol();
 
 };
+//! класс описание блока параметров
 class NodeBlock :public NodeProtocol
 {
 public:
@@ -93,6 +98,7 @@ public:
     virtual int type()const{return NodeProtocol::BLOCK_OUTPUT_DATA;}
 
 };
+//! класс описывающий один параметр
 class NodeParam :public NodeBlock
 {
 public:
@@ -112,6 +118,8 @@ public:
     NodeParam (const QDomElement&,NodeProtocol *);
     //! тип узла
     virtual int type()const{return NodeProtocol::PARAM;}
+    //! заполнение переменной bin
+    static char* binData(NodeParam* node);
     //! ед. измерения
     QString messure;
     //! значение параметра
@@ -120,6 +128,16 @@ public:
     TypeData typeP;
     //! комментарий
     QString comment;
+    //! общее кол-во элементов байтов, которое занимает этот элемент с потомками
+    uint32_t bytes;
+    //! адрес памяти по которому лежит структура относительно начала
+    uint32_t offset;
+    //! выравнивание указанным кол-вом байтов
+    uint32_t alignBytes;
+    //! прямой адрес в памяти
+    uint32_t directAddr;
+    //! значение параметра в бинарном виде(с учетом типа)
+    char* bin;
 };
 //!
 class NodeUseCommand :public NodeBlock
