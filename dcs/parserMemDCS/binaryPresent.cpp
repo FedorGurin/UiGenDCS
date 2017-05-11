@@ -3,41 +3,42 @@
 #include "Structure.h"
 
 #include <QStringList>
+#include <QDataStream>
+
+BinaryPresent* BinaryPresent::binary = 0;
 
 BinaryPresent::BinaryPresent(QObject *parent):QObject(parent)
 {
 
 }
-void BinaryPresent::getData(Node* node,QDataStream &out)
+void BinaryPresent::getData(Node* toNode,QByteArray *fromMem)
+{   
+    QDataStream out(fromMem, QIODevice::ReadOnly);
+
+    out.setVersion(QDataStream::Qt_4_2);
+    out.setByteOrder(QDataStream::LittleEndian);//закомментировать только для отладки
+
+    int bitField=0;
+    recursGetData(toNode,out,bitField);
+}
+
+void BinaryPresent::setData(Node* fromNode, QByteArray *toMem)
 {
-    QByteArray datagram;
-    QDataStream in(&datagram, QIODevice::WriteOnly);
+    QDataStream in(toMem, QIODevice::WriteOnly);
 
     in.setVersion(QDataStream::Qt_4_2);
     in.setByteOrder(QDataStream::LittleEndian);//закомментировать только для отладки
 
     int bitField=0;
-    recursGetData(node,in,bitField);
+    recursSetData(fromNode,in,bitField);
 }
 
-void BinaryPresent::setData(GenericNode* node, uint uidNode)
-{
-    QByteArray datagram;
-    QDataStream in(&datagram, QIODevice::WriteOnly);
-
-    in.setVersion(QDataStream::Qt_4_2);
-    in.setByteOrder(QDataStream::LittleEndian);//закомментировать только для отладки
-
-    int bitField=0;
-    recursSetData(sio,in,bitField);
-}
-
-void BinaryPresent::recursSetData(GenericNode* node,QDataStream &in,int &bitField)
+void BinaryPresent::recursSetData(Node* node,QDataStream &in,int &bitField)
 {
     for(int i=0;i<node->child.size();i++)
     {
         Node *tempNode=node->child[i];
-        if(tempNode->type()==Node::STRUCT || tempNode->type()==Node::GROUP)
+        if(tempNode->type()==Node::STRUCT )
         {
             ////////// подготавливаем рекурсию
             if(tempNode->type()==Node::STRUCT)
@@ -49,14 +50,14 @@ void BinaryPresent::recursSetData(GenericNode* node,QDataStream &in,int &bitFiel
                 }
             }
             ////////////////////////////////
-            recursSetData(static_cast<GenericNode* >(tempNode),in,bitField);
+            recursSetData(static_cast<Node* >(tempNode),in,bitField);
             if(tempNode->type()==Node::STRUCT)
             {
                 Structure *str=static_cast<Structure *> (tempNode);
                 if(str->isFieldBits==1)
                 {
                     in<<bitField;
-                    dumpForm->addValue(str->offset,QString::number(bitField,2)+tr("Битовое поле-")+str->displayName,4);
+                    //dumpForm->addValue(str->offset,QString::number(bitField,2)+tr("Битовое поле-")+str->displayName,4);
                 }
             }
         }else if(tempNode->type()==Node::PARAM)
@@ -115,7 +116,7 @@ void BinaryPresent::getAllign(QDataStream &out,int nums)
         out>>cc;
     }
 }
-void BinaryPresent::recursGetData(GenericNode* node,QDataStream &out, int &tempBit)
+void BinaryPresent::recursGetData(Node* node,QDataStream &out, int &tempBit)
 {
     //! переменные для преобразования
     double          dd=0.0;
@@ -130,7 +131,7 @@ void BinaryPresent::recursGetData(GenericNode* node,QDataStream &out, int &tempB
     for(int i=0;i<node->child.size();i++)
     {
         Node *tempNode=node->child[i];
-        if(tempNode->type()==Node::STRUCT  || tempNode->type()==Node::GROUP)
+        if(tempNode->type()==Node::STRUCT)
         {
             int tempBit_=0;
             if(tempNode->type()==Node::STRUCT)
@@ -143,7 +144,7 @@ void BinaryPresent::recursGetData(GenericNode* node,QDataStream &out, int &tempB
 
                 }
             }
-            recursGetData(static_cast<GenericNode* >(tempNode),out,tempBit_);
+            recursGetData(static_cast<Node* >(tempNode),out,tempBit_);
         }else if(tempNode->type()==Node::PARAM)
         {
             Parameter* param=static_cast<Parameter* >(tempNode);

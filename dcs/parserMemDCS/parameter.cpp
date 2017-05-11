@@ -8,7 +8,7 @@
 #include "parameter.h"
 #include "../globalFunc/math_func.h"
 #include <QByteArray>
-
+#include <QDataStream>
 char Parameter::alignArray[8]={0,0,0,0,0,0,0,0};
 
 Parameter::Parameter(const QDomElement& element,Node *parent):Node()
@@ -43,7 +43,7 @@ Parameter::Parameter(const QDomElement& element,Node *parent):Node()
         idName=displayName;
 
     comment=element.attribute("comment","");
-    isDisplay=((element.attribute("isDisplay")).toInt());
+    //isDisplay=((element.attribute("isDisplay")).toInt());
 
     messure=element.attribute("messure","");
     if(messure=="")
@@ -110,18 +110,18 @@ Parameter::Parameter(const QDomElement& element,Node *parent):Node()
 
     str=element.attribute("indicate","default");
 
-    if(str=="default")          modeIndication=Parameter::DEFAULT_IND;
-    else if(str=="dial")        modeIndication=Parameter::DIAL;
-    else if(str=="hslider")     modeIndication=Parameter::SLIDER_H;
-    else if(str=="vslider")     modeIndication=Parameter::SLIDER_V;
-    else if(str=="grad_min_sec")modeIndication=Parameter::GRAD_MINUTE_SEC;
-    else if(str=="check_box")   modeIndication=Parameter::CHECK_BOX;
+//    if(str=="default")          modeIndication=Parameter::DEFAULT_IND;
+//    else if(str=="dial")        modeIndication=Parameter::DIAL;
+//    else if(str=="hslider")     modeIndication=Parameter::SLIDER_H;
+//    else if(str=="vslider")     modeIndication=Parameter::SLIDER_V;
+//    else if(str=="grad_min_sec")modeIndication=Parameter::GRAD_MINUTE_SEC;
+//    else if(str=="check_box")   modeIndication=Parameter::CHECK_BOX;
 
-    if(modeIndication==Parameter::GRAD_MINUTE_SEC)
-    {
-        //! значение не определено для
-        value=QString("000°00'00.000000\"");
-    }
+//    if(modeIndication==Parameter::GRAD_MINUTE_SEC)
+//    {
+//        //! значение не определено для
+//        value=QString("000°00'00.000000\"");
+//    }
 
 
     parent->addChild(this);
@@ -143,8 +143,8 @@ Parameter::Parameter(const QDomElement& element,Node *parent):Node()
     //! добавляем указанное кол-во байт
     parent->addBytes(bytes+alignBytes);
 
-    if(isDisplay==true)
-        parent->addVisionChild(this);
+//    if(isDisplay==true)
+//        parent->addVisionChild(this);
 
     child.clear();
     //! кол-во элементов(если массив)
@@ -202,7 +202,7 @@ void Parameter::recFindEnumParam(const QDomElement& el)
         listEnum.push_back(st);
     }
 }
-Parameter::Parameter(const Parameter* param, Node *glParent /*глобальный предок*/):GenericNode()
+Parameter::Parameter(const Parameter* param, Node *glParent /*глобальный предок*/):Node()
 {
     child.clear();//потомков нет
 
@@ -223,8 +223,8 @@ Parameter::Parameter(const Parameter* param, Node *glParent /*глобальны
     restriction     = true;
     valueVariant    = 0;
 
-    modeEdit=       param->modeEdit;
-    modeIndication= param->modeIndication;
+//    modeEdit=       param->modeEdit;
+//    modeIndication= param->modeIndication;
 
     acc=            param->acc;
     typeP=          param->typeP;
@@ -277,8 +277,8 @@ Parameter::Parameter(const Parameter* param, Node *glParent /*глобальны
     //! добавим смещение для выравнивания
     offset += alignBytes;
 
-    GenericNode *tempParent=static_cast<GenericNode* > (parent);
-    tempParent->addBytes(bytes+alignBytes);
+    //Node *tempParent=static_cast<Node* > (parent);
+    parent->addBytes(bytes+alignBytes);
 }
 void Parameter::refreshValues(void)
 {
@@ -293,7 +293,7 @@ void Parameter::addMassiveParam(void)
 
         for(int i=1;i<howElements;i++)
         {
-            newParam=new Parameter(this,(GenericNode*)this->parent);
+            newParam=new Parameter(this,this->parent);
 
             newParam->displayName+="["+QString::number(i+1+startIndex)+"]";
             newParam->idName+="["+QString::number(i+1+startIndex)+"]";

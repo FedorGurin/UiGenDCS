@@ -150,12 +150,13 @@ void ProxyDCS::parseInfo(TPacket& recivePacket)
         }
         if(findModule == false)
         {
-            //! сохраняем модуль в спсике
+            //! сохраняем модуль в списке
             DefineAddr *newAddr = new DefineAddr;
             newAddr->ip = QString(infoAddr->addr[i].ip);
 
             newAddr->portModule = infoAddr->addr[i].portModule;
             newAddr->uid_module = infoAddr->addr[i].uid_module;
+            newAddr->name       = infoAddr->addr[i].name;
             if(newAddr->uid_module!= recivePacket.head.uid_module)
                 newAddr->broadcast = false;
             else
@@ -196,6 +197,9 @@ void ProxyDCS::processPacket(QByteArray& datagram)
     {
           out.readRawData((char*)&infoRecive,headPacket.size);
           parseInfo(infoRecive);
+    }else if(headPacket.type == 1)
+    {
+        printf("Recive data\n");
     }
     reciveFromShare = true;
 }
@@ -255,6 +259,7 @@ void ProxyDCS::slotSendInfoAll()
     infoAddr->addr[0].uid_module   = info.uid_module;
     infoAddr->addr[0].broadcast    = broadcast;
     infoAddr->addr[0].portModule   = info.portModule;
+    strcpy(infoAddr->addr[0].name,(const char*)info.name.toLocal8Bit().constData());
     strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
     for(int i=0;i<infoModules.size();i++)
@@ -262,6 +267,8 @@ void ProxyDCS::slotSendInfoAll()
         infoAddr->addr[i+1].uid_module = infoModules[i]->uid_module;
         infoAddr->addr[i+1].portModule = infoModules[i]->portModule;
         infoAddr->addr[i+1].broadcast  = infoModules[i]->broadcast;
+        //infoAddr->addr[i+1].broadcast  = infoModules[i]->name;
+        strcpy(infoAddr->addr[i+1].name,(const char*)info.name.toLocal8Bit().constData());
         strcpy(infoAddr->addr[i+1].ip,(const char*)infoModules[i]->ip.toLocal8Bit().constData());
     }
 
@@ -320,6 +327,7 @@ void ProxyDCS::slotSendInfoOwn()
     infoAddr->addr[0].uid_module = info.uid_module;
     infoAddr->addr[0].portModule = info.portModule;
     infoAddr->addr[0].broadcast  = false;
+    strcpy(infoAddr->addr[0].name,(const char*)info.name.toLocal8Bit().constData());
     strcpy(infoAddr->addr[0].ip,(const char*)info.ip.toLocal8Bit().constData());
 
     for(int i=0;i<infoModules.size();i++)
@@ -353,6 +361,10 @@ void ProxyDCS::sendRequest(RequestDCS& req)
     if(block!=0)
     {
         TPacket packet;
+        packet.head.magic_number = MAGIC_NUMBER;
+        packet.head.type = 1;
+        packet.head.uid_module      = info.uid_module;
+        packet.head.size = sizeof(THeadPacket);
         //! !!!!! НУЖНО ПРАВИЛЬНО ЗАПОЛНИТЬ PACKET
         //! ВЫБРАТЬ ПРАВИЛЬНЫЙ ТИП ПАКЕТА
         //!

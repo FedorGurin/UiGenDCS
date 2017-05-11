@@ -116,7 +116,7 @@ void Structure::addMassiveStruct(void)
         Structure *newStruct=0;
         for(int i=1;i<howElements;i++)
         {
-            newStruct=new Structure(this,(GenericNode*)this->parent);
+            newStruct=new Structure(this,(Node*)this->parent);
 
             newStruct->displayName+="["+QString::number(i+1+startIndex)+"]";
             newStruct->idName+="["+QString::number(i+1+startIndex)+"]";
