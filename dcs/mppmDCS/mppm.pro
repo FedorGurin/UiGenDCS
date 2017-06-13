@@ -20,7 +20,10 @@ QMAKE_CXXFLAGS_DEBUG += -mno-align-double
 TARGET = mppm
 TEMPLATE = app
 
-FORMS += \
+DEPENDPATH += .
+INCLUDEPATH += .
+
+FORMS +=
     xml/binform.ui \
     xml/dialform.ui \
     xml/dumpform.ui \
@@ -34,7 +37,7 @@ FORMS += \
     xml/slidervform.ui \
     xml/xmlmodelview.ui
 
-HEADERS += \
+HEADERS +=
     xml/BinaryPresent.h \
     xml/binform.h \
     xml/cl_TransferdataUDP.h \
@@ -71,7 +74,7 @@ HEADERS += \
     globalFunc/Vector3D_D.h \
     CommonEngineData/CommonEngineData.h
 
-SOURCES += \
+SOURCES +=
     xml/BinaryPresent.cpp \
     xml/binform.cpp \
     xml/cl_TransferdataUDP.cpp \
@@ -101,12 +104,7 @@ SOURCES += \
     xml/Structure.cpp \
     xml/VariantNode.cpp \
     xml/VariantState.cpp \
-    xml/xmlmodelview.cpp \
-    globalFunc/gl_func.cpp \
-    globalFunc/Matrix3D_D.cpp \
-    globalFunc/mercator.cpp \
-    globalFunc/Vector3D_D.cpp \
-    CommonEngineData/CommonEngineData.cpp \
+    xml/xmlmodelview.cpp \   
     main.cpp
 
 
