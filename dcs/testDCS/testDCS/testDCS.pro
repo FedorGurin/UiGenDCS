@@ -7,7 +7,7 @@ CONFIG -= app_bundle
 TEMPLATE = app
 #INCLUDEPATH += include \
 
-SOURCES +=  fedor_msg.pb.cc \
+SOURCES +=  \
             ../../globalFunc/utils_func.cpp \
             ../../proxyDCS/domParserProtocol.cpp \
             ../../proxyDCS/nodeProtocol.cpp \
@@ -19,7 +19,7 @@ SOURCES +=  fedor_msg.pb.cc \
 
 
 
-HEADERS +=  fedor_msg.pb.h \
+HEADERS +=  \
     ../../globalFunc/utils_func.h \
     ../../proxyDCS/domParserProtocol.h \
     ../../proxyDCS/nodeProtocol.h \

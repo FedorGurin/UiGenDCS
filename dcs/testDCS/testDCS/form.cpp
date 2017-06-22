@@ -1,6 +1,6 @@
 #include "form.h"
 #include "ui_form.h"
-#include "fedor_msg.pb.h"
+
 Form::Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Form)
@@ -24,8 +24,7 @@ void Form::send(bool value)
 
     proxyDCS->sendRequest(req);
 
-    fedor::SearhRequest request;
-    request.set_name("Hello");
+
 }
 
 Form::~Form()
