@@ -14,6 +14,17 @@ TARGET = parserMemDCS
 TEMPLATE = lib
 CONFIG += staticlib
 
+unix{
+    VERSION = 1.0.1
+
+    CONFIG(debug, debug|release):TARGET = parserMemDCSd
+    CONFIG(release, debug|release):TARGET = parserMemDCS
+} else{
+    CONFIG(debug, debug|release):TARGET = libParserMemDCSd
+    CONFIG(release, debug|release):TARGET = libParserMemDCS
+    #TARGET = $$qtLibraryTarget(libsubmodel)
+}
+
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
