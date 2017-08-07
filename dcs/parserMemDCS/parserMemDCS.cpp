@@ -44,6 +44,8 @@ QStringList convertValueTreeToStrings(Node* root)
 void convertTitleTreeToStrings(Node* root,QStringList& listName,QStringList& listMes)
 {
     //QStringList list;
+    if(root == 0)
+        return;
     for(int i=0;i<root->child.size();i++)
     {
         if(root->child[i]->type() == Node::PARAM)

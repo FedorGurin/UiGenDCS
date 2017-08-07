@@ -135,7 +135,7 @@ Parameter::Parameter(const QDomElement& element,Node *parent):Node()
         offset=parent->offset;
 
     //! подсчет байт для выравнивания
-    alignBytes=checkAlign_4byte();
+    alignBytes=checkAlign_8byte();
 
     //! добавим смещение для выравнивания
     offset += alignBytes;
@@ -157,8 +157,8 @@ Parameter::Parameter(const QDomElement& element,Node *parent):Node()
 //! проверка на выравнивание
 uint Parameter::checkAlign_4byte()
 {
-    int aB=0;
-    if(typeP != CHAR && typeP != UCHAR && typeP != INT16)
+    uint aB=0;
+    if(typeP != CHAR && typeP != UCHAR && typeP != INT16 && typeP != BOOL)
     {
         if(offset<sizeof(int) && offset!=0)
             aB=sizeof(int)-offset;
@@ -170,13 +170,15 @@ uint Parameter::checkAlign_4byte()
 //! проверка на выравнивание
 uint Parameter::checkAlign_8byte()
 {
-    int aB=0;
-    if(typeP != CHAR && typeP != UCHAR && typeP != INT16)
+    uint aB=0;
+    if(typeP != CHAR && typeP != UCHAR && typeP != INT16 && typeP != BOOL)
     {
-        if(offset<sizeof(int))
-            aB=sizeof(double)-offset;
-        else
-            aB=offset%sizeof(double);
+        int div = offset/sizeof(double);
+        int mul = div*sizeof(double);
+        if(offset>mul && offset!=0)
+            aB=sizeof(double)-(offset-mul);
+//        else
+//            aB=offset%sizeof(double);
     }
     return aB;
 }
@@ -445,7 +447,7 @@ char* Parameter::binData(Parameter* node)
     }
     case BOOL:
     {
-        int p=node->value.toInt();
+        quint8 p=node->value.toInt();
         memcpy(node->bin,&p,node->bytes);
         break;
     }
