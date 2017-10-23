@@ -15,6 +15,7 @@ public:
               BLOCK_INPUT_DATA,     /*блок описывающий входные данные*/
               BLOCK_OUTPUT_DATA,    /*блок описывающий выходные данные*/
               PARAM,                /*узел описывающий параметр*/
+              STRUCT,               /*узел описывающий структуру*/
               USE_COMMAND,          /*узел описывающий команду которую будем использовать*/
               DEF_COMMAND};         /*узел объявляющий новую команду*/
 
@@ -77,6 +78,8 @@ public:
     QString nameModule;
     //! уникальный идентификатор модуля
     uint32_t uid_module;
+    //! синхронно обрабатывать
+    bool syncho;
 
     virtual int type()const{return NodeProtocol::BLOCK;}
 };
@@ -120,6 +123,26 @@ public:
     TypeData typeP;
     //! комментарий
     QString comment;
+    //! множитель
+    QString factor;
+    //! признак того, что для параметра определен множитель
+    bool isFactor;
+    //! значение множителя
+    float factorValue;
+    //! проверка на выравнивание по 4 байтам
+    uint checkAlign_4byte();
+    //! проверка на выравнивание по 8 байтам
+    uint checkAlign_8byte();
+    //! значение параметра в бинарном виде(с учетом типа)
+    char* bin;
+    //! заполнение переменной bin
+    static char* binData(Parameter* node);
+    //! задать бинарные данные
+    static void setBinData(char* fromData, Parameter* node);
+    //! выравнивание
+    static uint alignData(QDataStream &out,Parameter* node);
+    static char alignArray[8];
+
 };
 //!
 class NodeUseCommand :public NodeBlock
