@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<data>
+ 
+        <struct isDisplay="1" howElements="1" comment="" displayName="Описание характеристик аэродромов" numEndBit="3" isFieldBits="0" numStartBit="6">
+          <param howElements="1" isDisplay="1" acc="3" displayName="value1" type="float" messure="м" comment="D_VPP"></param>
+          <param howElements="1" isDisplay="1" acc="3" displayName="value2" type="float" messure="м" comment="H_aer"></param>
+          <param howElements="1" isDisplay="1" acc="3" displayName="value3" type="float" messure="м" comment="H_kruga"></param>
+          <param howElements="1" isDisplay="1" acc="3" displayName="value4" type="float" messure="град" comment="eps_pos"></param>
+          <param howElements="1" isDisplay="1" acc="3" displayName="value5" type="float" messure="м" comment="L_VPP"></param>
+        </struct>
+ 
+</data>
