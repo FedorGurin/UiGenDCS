@@ -5,6 +5,8 @@
 #include <QDomElement>
 #include <QList>
 #include <stdint.h>
+
+//! базовый класс для всех узлов
 class NodeProtocol
 {
 public:
@@ -15,12 +17,13 @@ public:
               BLOCK_INPUT_DATA,     /*блок описывающий входные данные*/
               BLOCK_OUTPUT_DATA,    /*блок описывающий выходные данные*/
               PARAM,                /*узел описывающий параметр*/
-              STRUCT,               /*узел описывающий структуру*/
               USE_COMMAND,          /*узел описывающий команду которую будем использовать*/
               DEF_COMMAND};         /*узел объявляющий новую команду*/
 
     QString name;
     QString pathName;
+
+
 
 
     //! добавить родителя
@@ -64,6 +67,7 @@ public:
     virtual ~NodeProtocol();
 
 };
+//! класс описание блока параметров
 class NodeBlock :public NodeProtocol
 {
 public:
@@ -78,8 +82,6 @@ public:
     QString nameModule;
     //! уникальный идентификатор модуля
     uint32_t uid_module;
-    //! синхронно обрабатывать
-    bool syncho;
 
     virtual int type()const{return NodeProtocol::BLOCK;}
 };
@@ -96,6 +98,7 @@ public:
     virtual int type()const{return NodeProtocol::BLOCK_OUTPUT_DATA;}
 
 };
+//! класс описывающий один параметр
 class NodeParam :public NodeBlock
 {
 public:
@@ -115,6 +118,8 @@ public:
     NodeParam (const QDomElement&,NodeProtocol *);
     //! тип узла
     virtual int type()const{return NodeProtocol::PARAM;}
+    //! заполнение переменной bin
+    static char* binData(NodeParam* node);
     //! ед. измерения
     QString messure;
     //! значение параметра
@@ -123,26 +128,16 @@ public:
     TypeData typeP;
     //! комментарий
     QString comment;
-    //! множитель
-    QString factor;
-    //! признак того, что для параметра определен множитель
-    bool isFactor;
-    //! значение множителя
-    float factorValue;
-    //! проверка на выравнивание по 4 байтам
-    uint checkAlign_4byte();
-    //! проверка на выравнивание по 8 байтам
-    uint checkAlign_8byte();
+    //! общее кол-во элементов байтов, которое занимает этот элемент с потомками
+    uint32_t bytes;
+    //! адрес памяти по которому лежит структура относительно начала
+    uint32_t offset;
+    //! выравнивание указанным кол-вом байтов
+    uint32_t alignBytes;
+    //! прямой адрес в памяти
+    uint32_t directAddr;
     //! значение параметра в бинарном виде(с учетом типа)
     char* bin;
-    //! заполнение переменной bin
-    static char* binData(Parameter* node);
-    //! задать бинарные данные
-    static void setBinData(char* fromData, Parameter* node);
-    //! выравнивание
-    static uint alignData(QDataStream &out,Parameter* node);
-    static char alignArray[8];
-
 };
 //!
 class NodeUseCommand :public NodeBlock

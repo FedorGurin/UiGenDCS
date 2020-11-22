@@ -45,7 +45,8 @@ typedef struct THeadPacket_
     //! глобальный уникальный идентификатор модуля отправителя
     uint32_t uid_module;
     //! Тип сообщения
-    uint8_t type; // 0 - пакет с информацией об узле, 1 - данные
+   
+    uint8_t type; // 0 - пакет с информацией об узле, 1 - передача команд от узла
     //! размер пакета
     uint32_t size;
     //! контрольная сумма
@@ -126,17 +127,8 @@ public:
     {
 
     }
-    //! передать данные в поток
-    void toStream(char* fromBuffer)
-    {
-        data.data()
-    }
-    void fromStream(char* toBuffer)
-    {
 
-    }
-
-    //! массив данных, которые пользователь сам разбирает в требуемом порядке(или QDataStream?)
+    //! массив данных, модуль дожен выполнить десериализацию(или QDataStream?)
     QByteArray data;
 };
 //! запрос на выполнение команды
@@ -148,7 +140,7 @@ public:
 
     }
 
-    //! добавить аргумент в команду(здесь тоже нужно обратиься в описание)
+    //! добавить аргумент в команду(здесь тоже нужно обратиться в описание)
     bool append(QString name,QString arg)
     {
         listArg<<arg;
@@ -199,6 +191,8 @@ private:
     void processPacket(QByteArray& datagram);
     //! разбор пакета с информацией
     void parseInfo(TPacket& recivePacket);
+    //! разбор пакета с командами от других модулей
+    void parseCommand(TPacket& recivePacket);
     //! список обнаруженных модулей
     QVector<DefineAddr * > infoModules;
     //! список разделяемой памяти входных параметров
